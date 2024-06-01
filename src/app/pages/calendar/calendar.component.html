@@ -5,7 +5,7 @@
     <button class="btn btn-primary" (click)="nextMonth()">След.</button>
   </div>
 
-  <table class="table table-bordered">
+  <table class="table table-bordered mb-5">
     <thead>
     <tr>
       <th *ngFor="let day of shortWeekDays">{{ day }}</th>
@@ -13,7 +13,9 @@
     </thead>
     <tbody>
     <tr *ngFor="let week of calendar">
-      <td *ngFor="let day of week" (click)="openCreateMeetingModal(day)">
+      <td *ngFor="let day of week"
+          (click)="openCreateMeetingModal(day)"
+          [class.today]="isToday(day)">
         <div>{{ day.date }}</div>
         <div *ngFor="let meeting of day.meetings" class="meeting" (click)="openMeetingModal(meeting, $event)">
           {{ meeting.dateTimeEpochMs | date: 'HH:mm' }}
@@ -36,7 +38,7 @@
         <form (ngSubmit)="createMeeting()">
           <div class="mb-3">
             <label for="meetingTime" class="form-label">Время</label>
-            <input type="datetime-local" id="meetingTime" class="form-control" [(ngModel)]="newMeeting.dateTimeEpochMs" name="dateTimeEpochMs">
+            <input type="time" id="meetingTime" class="form-control" [(ngModel)]="newMeeting.time" name="time" required>
           </div>
           <div class="mb-3">
             <label for="meetingComment" class="form-label">Комментарий</label>

@@ -15,8 +15,9 @@ export class CalendarComponent implements OnInit {
   public calendar: any[] = [];
   public shortWeekDays: string[] = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
   public meetings: Meeting[] = [];
-  public newMeeting: Meeting = { id: '', dateTimeEpochMs: 0, comment: '', audience: '', company: '' };  // Инициализация пустым объектом
+  public newMeeting: { time: string, comment: string, audience: string, company: string } = { time: '', comment: '', audience: '', company: '' };  // Инициализация пустым объектом
   public selectedMeeting: Meeting | null = null;
+  public selectedDate: Date | null = null;
 
   constructor() {
     const today = new Date();
@@ -53,7 +54,7 @@ export class CalendarComponent implements OnInit {
     this.monthName = firstDay.toLocaleString('default', { month: 'long' });
 
     const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay();
+    const startDay = firstDay.getDay() || 7;  // Correcting the start day for Sunday
     const calendar = [];
     let week = [];
 
@@ -113,18 +114,31 @@ export class CalendarComponent implements OnInit {
 
   openCreateMeetingModal(day: any) {  // Явное указание типа any
     if (day.date) {
-      const date = new Date(this.year, this.month, day.date).toISOString().slice(0, 16);
-      this.newMeeting = { id: '', dateTimeEpochMs: new Date(date).getTime(), comment: '', audience: '', company: '' };
+      this.selectedDate = new Date(this.year, this.month, day.date);
+      this.newMeeting = { time: '00:00', comment: '', audience: '', company: '' };
       const modal = new bootstrap.Modal(document.getElementById('createMeetingModal'));
       modal.show();
     }
   }
 
   createMeeting() {
-    this.newMeeting.id = (this.meetings.length + 1).toString();
-    this.meetings.push(this.newMeeting);
-    this.updateCalendar();
-    bootstrap.Modal.getInstance(document.getElementById('createMeetingModal')).hide();
+    if (this.selectedDate) {
+      const [hours, minutes] = this.newMeeting.time.split(':').map(Number);
+      const meetingDateTime = new Date(this.selectedDate);
+      meetingDateTime.setHours(hours, minutes);
+
+      const newMeeting: Meeting = {
+        id: (this.meetings.length + 1).toString(),
+        dateTimeEpochMs: meetingDateTime.getTime(),
+        comment: this.newMeeting.comment,
+        audience: this.newMeeting.audience,
+        company: this.newMeeting.company
+      };
+
+      this.meetings.push(newMeeting);
+      this.updateCalendar();
+      bootstrap.Modal.getInstance(document.getElementById('createMeetingModal')).hide();
+    }
   }
 
   openMeetingModal(meeting: Meeting, event: MouseEvent) {
@@ -132,5 +146,14 @@ export class CalendarComponent implements OnInit {
     this.selectedMeeting = meeting;
     const modal = new bootstrap.Modal(document.getElementById('viewMeetingModal'));
     modal.show();
+  }
+
+  isToday(day: any): boolean {
+    if (!day.date) return false;
+    const today = new Date();
+    const date = new Date(this.year, this.month, day.date);
+    return today.getFullYear() === date.getFullYear() &&
+      today.getMonth() === date.getMonth() &&
+      today.getDate() === date.getDate();
   }
 }
