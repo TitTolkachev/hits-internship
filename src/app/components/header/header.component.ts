@@ -12,33 +12,26 @@ export class HeaderComponent {
     { name: 'Поток 2' },
     { name: 'Поток 3' }
   ];
-  newStreamName = '';
+  newStreamName: string = '';
 
   selectStream(stream: any) {
-    console.log('Selected stream:', stream);
-    // Здесь можно добавить логику для обработки выбранного потока
+    console.log('Selected stream:', stream.name);
   }
 
   openAddStreamModal() {
-    const modalElement = document.getElementById('addStreamModal');
-    if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement, {
-        keyboard: false
-      });
-      modal.show();
-    }
+    const addStreamModal = new bootstrap.Modal(document.getElementById('addStreamModal')!, {
+      keyboard: false
+    });
+    addStreamModal.show();
   }
 
   addStream() {
     if (this.newStreamName) {
       this.streams.push({ name: this.newStreamName });
       this.newStreamName = '';
-      const modalElement = document.getElementById('addStreamModal');
-      if (modalElement) {
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-          modal.hide();
-        }
+      const addStreamModal = bootstrap.Modal.getInstance(document.getElementById('addStreamModal')!);
+      if (addStreamModal) {
+        addStreamModal.hide();
       }
     }
   }

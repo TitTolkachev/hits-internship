@@ -39,6 +39,6 @@ export class PartnersComponent implements OnInit {
   }
 
   goToPartnerDetail(partner: PartnerListItem): void {
-    this.router.navigate(['/partners', partner.id]);
+    this.router.navigate(['/main/partners', partner.id]);
   }
 }
