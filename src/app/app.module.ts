@@ -7,13 +7,17 @@ import {HomeComponent} from "./pages/home/home.component";
 import {AboutComponent} from "./pages/about/about.component";
 import {HeaderComponent} from './components/header/header.component';
 import {FormsModule} from "@angular/forms";
+import { PartnersComponent } from './partners/partners.component';
+import { PartnerDetailComponent } from './partner-detail/partner-detail.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     AboutComponent,
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    PartnersComponent,
+    PartnerDetailComponent
   ],
   bootstrap: [AppComponent],
   imports: [

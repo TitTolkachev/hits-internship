@@ -1,0 +1,14 @@
+<div class="container">
+  <h2>Наши партнёры</h2>
+  <div class="list-group">
+    <div *ngFor="let partner of partners" class="list-group-item mb-3 shadow-sm" (click)="goToPartnerDetail(partner)" style="cursor: pointer;">
+      <div class="card-body">
+        <h5 class="card-title">{{ partner.name }}</h5>
+        <p class="card-text">{{ partner.description }}</p>
+        <p class="card-text">
+          <small class="text-muted">Дата ближайшей встречи: {{ formatDate(partner.nextMeetingDate) }}</small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
