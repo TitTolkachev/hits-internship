@@ -1,0 +1,70 @@
+<div class="container" *ngIf="partner">
+  <h2>{{ partner?.name }}</h2>
+  <p>{{ partner?.description }}</p>
+  <p><strong>Дата ближайшей встречи:</strong> {{ partner ? formatDate(partner.nextMeetingDate) : '' }}</p>
+  <p><strong>Контактное лицо в компании:</strong> {{ partner?.companyContact?.email }}, {{ partner?.companyContact?.telegram }}</p>
+  <p><strong>Контактное лицо на факультете:</strong> {{ partner?.facultyContact?.firstName }} {{ partner?.facultyContact?.lastName }}</p>
+  <p><strong>Количество студентов с офферами:</strong> {{ partner?.studentOffers?.length }}</p>
+  <ul>
+    <li *ngFor="let job of partner?.jobPositions | keyvalue">
+      <strong>{{ job.key }}:</strong> {{ job.value }}
+    </li>
+  </ul>
+  <button class="btn btn-primary" (click)="openEditModal()">Редактировать</button>
+
+  <!-- Modal для редактирования информации о партнёре -->
+  <div class="modal fade" id="editPartnerModal" tabindex="-1" aria-labelledby="editPartnerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPartnerModalLabel">Редактировать информацию о партнёре</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="partnerName" class="form-label">Название компании</label>
+              <input type="text" class="form-control" id="partnerName" [(ngModel)]="editPartnerName" name="partnerName">
+            </div>
+            <div class="mb-3">
+              <label for="partnerDescription" class="form-label">Описание компании</label>
+              <textarea class="form-control" id="partnerDescription" [(ngModel)]="editPartnerDescription" name="partnerDescription"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="nextMeetingDate" class="form-label">Дата ближайшей встречи</label>
+              <input type="datetime-local" class="form-control" id="nextMeetingDate" [(ngModel)]="editNextMeetingDate" name="nextMeetingDate">
+            </div>
+            <div class="mb-3">
+              <label for="companyContactEmail" class="form-label">Email контактного лица в компании</label>
+              <input type="email" class="form-control" id="companyContactEmail" [(ngModel)]="editCompanyContactEmail" name="companyContactEmail">
+            </div>
+            <div class="mb-3">
+              <label for="companyContactTelegram" class="form-label">Telegram контактного лица в компании</label>
+              <input type="text" class="form-control" id="companyContactTelegram" [(ngModel)]="editCompanyContactTelegram" name="companyContactTelegram">
+            </div>
+            <div class="mb-3">
+              <label for="facultyContactFirstName" class="form-label">Имя контактного лица на факультете</label>
+              <input type="text" class="form-control" id="facultyContactFirstName" [(ngModel)]="editFacultyContactFirstName" name="facultyContactFirstName">
+            </div>
+            <div class="mb-3">
+              <label for="facultyContactLastName" class="form-label">Фамилия контактного лица на факультете</label>
+              <input type="text" class="form-control" id="facultyContactLastName" [(ngModel)]="editFacultyContactLastName" name="facultyContactLastName">
+            </div>
+            <div class="mb-3">
+              <label for="studentOffers" class="form-label">Офферы студентам (через запятую)</label>
+              <input type="text" class="form-control" id="studentOffers" [(ngModel)]="editStudentOffers" name="studentOffers">
+            </div>
+            <div class="mb-3">
+              <label for="jobPositions" class="form-label">Позиции и количество (например, Android-разработчик:10, Frontend:5)</label>
+              <input type="text" class="form-control" id="jobPositions" [(ngModel)]="editJobPositions" name="jobPositions">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Сохранить изменения</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

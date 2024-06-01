@@ -1,0 +1,17 @@
+.container {
+  margin-top: 20px;
+}
+
+.list-group-item {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.card-text {
+  margin-bottom: 1rem;
+}
