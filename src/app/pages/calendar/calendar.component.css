@@ -1,0 +1,31 @@
+.table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table th, .table td {
+  width: 14.28%; /* 100% / 7 дней недели */
+  height: 150px; /* Увеличенная высота элементов */
+  vertical-align: top;
+  position: relative;
+  cursor: pointer;
+}
+
+.table td {
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.table td:hover {
+  background-color: #f8f9fa;
+}
+
+.meeting {
+  background-color: #e9ecef;
+  border: 1px solid #ccc;
+  padding: 2px;
+  margin-top: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}

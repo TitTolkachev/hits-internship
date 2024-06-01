@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <button class="btn btn-primary" (click)="previousMonth()">Пред.</button>
+    <h2>{{ monthName }} {{ year }}</h2>
+    <button class="btn btn-primary" (click)="nextMonth()">След.</button>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th *ngFor="let day of shortWeekDays">{{ day }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let week of calendar">
+      <td *ngFor="let day of week" (click)="openCreateMeetingModal(day)">
+        <div>{{ day.date }}</div>
+        <div *ngFor="let meeting of day.meetings" class="meeting" (click)="openMeetingModal(meeting, $event)">
+          {{ meeting.dateTimeEpochMs | date: 'HH:mm' }}
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Create Meeting Modal -->
+<div class="modal fade" id="createMeetingModal" tabindex="-1" aria-labelledby="createMeetingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createMeetingModalLabel">Создать встречу</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="createMeeting()">
+          <div class="mb-3">
+            <label for="meetingTime" class="form-label">Время</label>
+            <input type="datetime-local" id="meetingTime" class="form-control" [(ngModel)]="newMeeting.dateTimeEpochMs" name="dateTimeEpochMs">
+          </div>
+          <div class="mb-3">
+            <label for="meetingComment" class="form-label">Комментарий</label>
+            <input type="text" id="meetingComment" class="form-control" [(ngModel)]="newMeeting.comment" name="comment">
+          </div>
+          <div class="mb-3">
+            <label for="meetingAudience" class="form-label">Аудитория</label>
+            <input type="text" id="meetingAudience" class="form-control" [(ngModel)]="newMeeting.audience" name="audience">
+          </div>
+          <div class="mb-3">
+            <label for="meetingCompany" class="form-label">Компания</label>
+            <input type="text" id="meetingCompany" class="form-control" [(ngModel)]="newMeeting.company" name="company">
+          </div>
+          <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Meeting Modal -->
+<div class="modal fade" id="viewMeetingModal" tabindex="-1" aria-labelledby="viewMeetingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewMeetingModalLabel">Информация о встрече</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Время:</strong> {{ selectedMeeting?.dateTimeEpochMs | date: 'yyyy-MM-dd HH:mm' }}</p>
+        <p><strong>Комментарий:</strong> {{ selectedMeeting?.comment }}</p>
+        <p><strong>Аудитория:</strong> {{ selectedMeeting?.audience }}</p>
+        <p><strong>Компания:</strong> {{ selectedMeeting?.company }}</p>
+      </div>
+    </div>
+  </div>
+</div>
