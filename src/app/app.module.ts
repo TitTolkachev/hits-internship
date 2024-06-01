@@ -1,4 +1,4 @@
-import {HttpClientModule} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {BrowserModule} from "@angular/platform-browser";
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
@@ -15,14 +15,12 @@ import {FormsModule} from "@angular/forms";
     AppComponent,
     HeaderComponent
   ],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
     FormsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+  ], providers: [provideHttpClient(withInterceptorsFromDi())]
 })
 export class AppModule {
 }
