@@ -5,17 +5,21 @@ import {AppComponent} from "./app.component";
 import {NgModule} from "@angular/core";
 import {HomeComponent} from "./pages/home/home.component";
 import {AboutComponent} from "./pages/about/about.component";
+import {HeaderComponent} from './components/header/header.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
     HomeComponent,
     AboutComponent,
-    AppComponent
+    AppComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

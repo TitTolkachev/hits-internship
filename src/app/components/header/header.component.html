@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">MyApp</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="streamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Выберите поток
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="streamDropdown">
+            <li *ngFor="let stream of streams"><a class="dropdown-item" href="#">{{ stream.name }}</a></li>
+          </ul>
+        </li>
+      </ul>
+      <button class="btn btn-primary" (click)="openAddStreamModal()">Добавить поток</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Modal -->
+<div class="modal fade" id="addStreamModal" tabindex="-1" aria-labelledby="addStreamModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStreamModalLabel">Добавить новый поток</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="streamName" class="form-label">Название потока</label>
+            <input type="text" class="form-control" id="streamName" [(ngModel)]="newStreamName" name="streamName">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary" (click)="addStream()">Добавить</button>
+      </div>
+    </div>
+  </div>
+</div>
