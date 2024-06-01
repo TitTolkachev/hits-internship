@@ -17,8 +17,7 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
     AboutComponent,
     AppComponent,
     HeaderComponent,
-    CalendarComponent
-    HeaderComponent,
+    CalendarComponent,
     PartnersComponent,
     PartnerDetailComponent
   ],
