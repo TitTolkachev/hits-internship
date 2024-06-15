@@ -1,37 +1,39 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Observable, of} from "rxjs";
+import {ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, ROLE_KEY, SERVER_URL} from "../constants";
+import {Token} from "../models/token";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private cookieService: CookieService, private router: Router) { }
-
-  login(role: string) {
-    this.cookieService.set('role', role);
+  constructor(
+    private router: Router,
+    private httpClient: HttpClient) {
   }
 
-  getRole(): string {
-    return this.cookieService.get('role');
+  login(email: string, password: string): Observable<Token> {
+    localStorage.removeItem(ACCESS_TOKEN_KEY)
+    localStorage.removeItem(REFRESH_TOKEN_KEY)
+    localStorage.removeItem(ROLE_KEY)
+    return this.httpClient.post<Token>(
+      `${SERVER_URL}/user/login`,
+      {
+        login: email,
+        password: password
+      }
+    )
   }
 
-  getRedirectUrl(): string {
-    const role = this.getRole();
-    if (role === 'main') {
-      return '/main';
-    } else if (role === 'dean') {
-      return '/dean';
-    } else {
-      return '/student';
-    }
+  isLogged(): boolean {
+    return localStorage.getItem(ACCESS_TOKEN_KEY) != null
   }
 
-  checkRoleAndRedirect() {
-    const role = this.getRole();
-    if (role) {
-      this.router.navigate([this.getRedirectUrl()]);
-    }
+  signOut(): Observable<void> {
+    localStorage.removeItem(ACCESS_TOKEN_KEY)
+    return of(undefined)
   }
 }

@@ -11,15 +11,15 @@ import {DeanComponent} from "./pages/dean/dean.component";
 import {StudentComponent} from "./pages/student/student.component";
 
 const routes: Routes = [
-  {path: '', component: LoginComponent},
-  {path: 'main', component: MainComponent},
+  {path: '', component: MainComponent},
+  {path: 'login', component: LoginComponent},
   {path: 'dean', component: DeanComponent},
   {path: 'student', component: StudentComponent},
-  {path: 'main/home', component: HomeComponent},
-  {path: 'main/about', component: AboutComponent},
-  {path: 'main/calendar', component: CalendarComponent},
-  {path: 'main/partners', component: PartnersComponent},
-  {path: 'main/partners/:id', component: PartnerDetailComponent}
+  {path: 'admin/home', component: HomeComponent},
+  {path: 'admin/about', component: AboutComponent},
+  {path: 'admin/calendar', component: CalendarComponent},
+  {path: 'admin/partners', component: PartnersComponent},
+  {path: 'admin/partners/:id', component: PartnerDetailComponent}
 ];
 
 @NgModule({

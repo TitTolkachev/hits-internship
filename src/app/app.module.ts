@@ -1,4 +1,4 @@
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {BrowserModule} from "@angular/platform-browser";
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
@@ -15,6 +15,7 @@ import {StudentComponent} from './pages/student/student.component';
 import {CookieService} from "ngx-cookie-service";
 import { DeanComponent } from './pages/dean/dean.component';
 import { MainComponent } from './pages/main/main.component';
+import {TokenInterceptorService} from "./services/token-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,10 @@ import { MainComponent } from './pages/main/main.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule
-  ], providers: [provideHttpClient(withInterceptorsFromDi()), CookieService]
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true },
+    provideHttpClient(withInterceptorsFromDi()), CookieService]
 })
 export class AppModule {
 }

@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
+import {ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, ROLE_KEY} from "../../constants";
+import {jwtDecode} from "jwt-decode";
+import {Jwt} from "../../models/jwt";
 
 @Component({
   selector: 'app-login',
@@ -8,15 +11,47 @@ import {AuthService} from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  state: any
   username: string = '';
   password: string = '';
-  role: string = 'student';
 
   constructor(private authService: AuthService, private router: Router) {
   }
 
   onSubmit() {
-    this.authService.login(this.role);
-    this.router.navigate([this.authService.getRedirectUrl()]);
+    this.state = 'loading'
+
+    this.authService.login(this.username.trim(), this.password.trim()).subscribe({
+      next: e => {
+        let role = jwtDecode<Jwt>(e.access_token).role
+
+        if (role != 'Admin' && role != 'Dean' && role != 'Student') {
+          this.state = 'error'
+          return;
+        }
+
+        localStorage.setItem(ACCESS_TOKEN_KEY, e.access_token)
+        localStorage.setItem(REFRESH_TOKEN_KEY, e.refresh_token)
+        localStorage.setItem(ROLE_KEY, role)
+
+        if (role == 'Admin') {
+          this.router.navigateByUrl("/admin/home").then()
+          return;
+        }
+        if (role == 'Dean') {
+          this.router.navigateByUrl("/dean").then()
+          return;
+        }
+        if (role == 'Student') {
+          this.router.navigateByUrl("/student").then()
+          return;
+        }
+
+        this.state = 'error'
+      },
+      error: err => {
+        this.state = 'error'
+      }
+    })
   }
 }
