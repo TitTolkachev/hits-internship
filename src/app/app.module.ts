@@ -16,6 +16,7 @@ import {CookieService} from "ngx-cookie-service";
 import { DeanComponent } from './pages/dean/dean.component';
 import { MainComponent } from './pages/main/main.component';
 import {TokenInterceptorService} from "./services/token-interceptor.service";
+import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {TokenInterceptorService} from "./services/token-interceptor.service";
     LoginComponent,
     StudentComponent,
     DeanComponent,
-    MainComponent
+    MainComponent,
+    AdminLayoutComponent
   ],
   bootstrap: [AppComponent],
   imports: [
