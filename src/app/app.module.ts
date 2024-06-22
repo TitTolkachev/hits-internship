@@ -17,6 +17,8 @@ import { DeanComponent } from './pages/dean/dean.component';
 import { MainComponent } from './pages/main/main.component';
 import {TokenInterceptorService} from "./services/token-interceptor.service";
 import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.component';
+import { StudentLayoutComponent } from './pages/student-layout/student-layout.component';
+import { DeanLayoutComponent } from './pages/dean-layout/dean-layout.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.componen
     StudentComponent,
     DeanComponent,
     MainComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+    StudentLayoutComponent,
+    DeanLayoutComponent
   ],
   bootstrap: [AppComponent],
   imports: [
