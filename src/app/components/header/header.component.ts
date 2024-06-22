@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import * as bootstrap from 'bootstrap'
+import {StreamService} from "../../services/stream.service";
 
 @Component({
   selector: 'app-header',
@@ -7,12 +8,26 @@ import * as bootstrap from 'bootstrap'
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  streams = [
-    { name: 'Поток 1' },
-    { name: 'Поток 2' },
-    { name: 'Поток 3' }
-  ];
+  streams: string[] = [];
   newStreamName: string = '';
+
+  constructor(private streamService: StreamService) {
+  }
+
+  ngOnInit(): void {
+    this.loadStrings();
+  }
+
+  loadStrings(): void {
+    this.streamService.getStrings().subscribe(
+      (data: string[]) => {
+        this.streams = data;
+      },
+      (error) => {
+        console.error('Error fetching strings', error);
+      }
+    );
+  }
 
   selectStream(stream: any) {
     console.log('Selected stream:', stream.name);
@@ -27,7 +42,7 @@ export class HeaderComponent {
 
   addStream() {
     if (this.newStreamName) {
-      this.streams.push({ name: this.newStreamName });
+      this.streams.push(this.newStreamName);
       this.newStreamName = '';
       const addStreamModal = bootstrap.Modal.getInstance(document.getElementById('addStreamModal')!);
       if (addStreamModal) {

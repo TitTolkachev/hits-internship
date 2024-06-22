@@ -19,6 +19,7 @@ import {TokenInterceptorService} from "./services/token-interceptor.service";
 import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.component';
 import { StudentLayoutComponent } from './pages/student-layout/student-layout.component';
 import { DeanLayoutComponent } from './pages/dean-layout/dean-layout.component';
+import {StreamService} from "./services/stream.service";
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import { DeanLayoutComponent } from './pages/dean-layout/dean-layout.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true },
-    provideHttpClient(withInterceptorsFromDi()), CookieService]
+    provideHttpClient(withInterceptorsFromDi()), CookieService, StreamService]
 })
 export class AppModule {
 }
