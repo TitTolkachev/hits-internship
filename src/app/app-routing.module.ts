@@ -8,10 +8,14 @@ import {CalendarComponent} from "./pages/calendar/calendar.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {MainComponent} from "./pages/main/main.component";
 import {DeanComponent} from "./pages/dean/dean.component";
-import {StudentComponent} from "./pages/student/student.component";
 import {AdminLayoutComponent} from "./pages/admin-layout/admin-layout.component";
 import {StudentLayoutComponent} from "./pages/student-layout/student-layout.component";
 import {DeanLayoutComponent} from "./pages/dean-layout/dean-layout.component";
+import {StudentAnnouncementsComponent} from "./pages/student/student-announcements/student-announcements.component";
+import {StudentCalendarComponent} from "./pages/student/student-calendar/student-calendar.component";
+import {StudentPartnersComponent} from "./pages/student/student-partners/student-partners.component";
+import {StudentTasksComponent} from "./pages/student/student-tasks/student-tasks.component";
+import {ProfileComponent} from "./pages/profile/profile.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -23,8 +27,11 @@ const routes: Routes = [
   },
   {
     path: 'student', component: StudentLayoutComponent, children: [
-      {path: '', component: StudentComponent},
-      {path: 'chat-with-admin', component: HomeComponent},
+      {path: 'announcements', component: StudentAnnouncementsComponent},
+      {path: 'calendar', component: StudentCalendarComponent},
+      {path: 'partners', component: StudentPartnersComponent},
+      {path: 'tasks', component: StudentTasksComponent},
+      {path: 'profile', component: ProfileComponent},
     ]
   },
   {
@@ -33,7 +40,8 @@ const routes: Routes = [
       {path: 'about', component: AboutComponent},
       {path: 'calendar', component: CalendarComponent},
       {path: 'partners', component: PartnersComponent},
-      {path: 'partners/:id', component: PartnerDetailComponent}
+      {path: 'partners/:id', component: PartnerDetailComponent},
+      {path: 'profile', component: ProfileComponent},
     ]
   },
 ];

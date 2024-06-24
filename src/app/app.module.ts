@@ -11,7 +11,6 @@ import {PartnersComponent} from './partners/partners.component';
 import {PartnerDetailComponent} from './partner-detail/partner-detail.component';
 import {CalendarComponent} from './pages/calendar/calendar.component';
 import {LoginComponent} from './pages/login/login.component';
-import {StudentComponent} from './pages/student/student.component';
 import {CookieService} from "ngx-cookie-service";
 import { DeanComponent } from './pages/dean/dean.component';
 import { MainComponent } from './pages/main/main.component';
@@ -20,6 +19,13 @@ import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.componen
 import { StudentLayoutComponent } from './pages/student-layout/student-layout.component';
 import { DeanLayoutComponent } from './pages/dean-layout/dean-layout.component';
 import {StreamService} from "./services/stream.service";
+import { StudentHeaderComponent } from './components/student-header/student-header.component';
+import { DeanHeaderComponent } from './components/dean-header/dean-header.component';
+import { StudentAnnouncementsComponent } from './pages/student/student-announcements/student-announcements.component';
+import { StudentCalendarComponent } from './pages/student/student-calendar/student-calendar.component';
+import { StudentTasksComponent } from './pages/student/student-tasks/student-tasks.component';
+import { StudentPartnersComponent } from './pages/student/student-partners/student-partners.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -31,12 +37,18 @@ import {StreamService} from "./services/stream.service";
     PartnersComponent,
     PartnerDetailComponent,
     LoginComponent,
-    StudentComponent,
     DeanComponent,
     MainComponent,
     AdminLayoutComponent,
     StudentLayoutComponent,
-    DeanLayoutComponent
+    DeanLayoutComponent,
+    StudentHeaderComponent,
+    DeanHeaderComponent,
+    StudentAnnouncementsComponent,
+    StudentCalendarComponent,
+    StudentTasksComponent,
+    StudentPartnersComponent,
+    ProfileComponent
   ],
   bootstrap: [AppComponent],
   imports: [

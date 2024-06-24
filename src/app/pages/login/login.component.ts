@@ -23,15 +23,15 @@ export class LoginComponent {
 
     this.authService.login(this.username.trim(), this.password.trim()).subscribe({
       next: e => {
-        let role = jwtDecode<Jwt>(e.access_token).role
+        let role = jwtDecode<Jwt>(e.accessToken).role
 
         if (role != 'Admin' && role != 'Dean' && role != 'Student') {
           this.state = 'error'
           return;
         }
 
-        localStorage.setItem(ACCESS_TOKEN_KEY, e.access_token)
-        localStorage.setItem(REFRESH_TOKEN_KEY, e.refresh_token)
+        localStorage.setItem(ACCESS_TOKEN_KEY, e.accessToken)
+        localStorage.setItem(REFRESH_TOKEN_KEY, e.refreshToken)
         localStorage.setItem(ROLE_KEY, role)
 
         if (role == 'Admin') {

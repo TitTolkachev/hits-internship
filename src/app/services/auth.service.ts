@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {Observable, of} from "rxjs";
 import {ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, ROLE_KEY, SERVER_URL} from "../constants";
 import {Token} from "../models/token";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,13 @@ export class AuthService {
   }
 
   signOut(): Observable<void> {
-    localStorage.removeItem(ACCESS_TOKEN_KEY)
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(ROLE_KEY);
     return of(undefined)
+  }
+
+  refreshToken(refreshToken: string): Observable<HttpResponse<any>> {
+    return this.httpClient.post<any>(`${SERVER_URL}/user/refresh`, {refreshToken}, {observe: 'response'});
   }
 }
