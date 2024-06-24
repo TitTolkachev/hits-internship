@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserGetDto } from '../models/user-get.dto';
 import {SERVER_URL} from "../constants";
+import {scheduleReadableStreamLike} from "rxjs/internal/scheduled/scheduleReadableStreamLike";
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +26,9 @@ export class UserService {
     return this.http.put<UserGetDto>(url, user);
   }
 
-  deleteUser(): Observable<VoidFunction> {
-    const url = `${this.apiPrefix}/`;
+  deleteUser(streamName: string): Observable<VoidFunction> {
+    const url = `${SERVER_URL}/stream/leave/${streamName}`;
     // @ts-ignore
-    return this.http.delete(url, user);
+    return this.http.post(url, user);
   }
 }
