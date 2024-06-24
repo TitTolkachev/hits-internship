@@ -1,1 +1,21 @@
-<p>dean-header works!</p>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container position-relative d-flex justify-content-between align-items-center">
+    <div class="position-absolute start-50 translate-middle-x">
+      <div class="navbar-nav">
+        <button class="btn btn-outline-primary mx-2" routerLink="/dean/announcements" routerLinkActive="active">Лента
+        </button>
+        <button class="btn btn-outline-primary mx-2" routerLink="/dean/tasks" routerLinkActive="active">Задания
+        </button>
+        <button class="btn btn-outline-primary mx-2" routerLink="/dean/users" routerLinkActive="active">Пользователи
+        </button>
+        <button class="btn btn-outline-primary mx-2" routerLink="/dean/marks" routerLinkActive="active">Оценки
+        </button>
+      </div>
+    </div>
+    <div class="ms-auto">
+      <button class="btn btn-outline-primary mx-2" routerLink="/dean/profile" routerLinkActive="active">Профиль
+      </button>
+      <button class="btn btn-danger">Выйти</button>
+    </div>
+  </div>
+</nav>

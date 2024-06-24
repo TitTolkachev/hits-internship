@@ -7,7 +7,6 @@ import {PartnerDetailComponent} from "./partner-detail/partner-detail.component"
 import {CalendarComponent} from "./pages/calendar/calendar.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {MainComponent} from "./pages/main/main.component";
-import {DeanComponent} from "./pages/dean/dean.component";
 import {AdminLayoutComponent} from "./pages/admin-layout/admin-layout.component";
 import {StudentLayoutComponent} from "./pages/student-layout/student-layout.component";
 import {DeanLayoutComponent} from "./pages/dean-layout/dean-layout.component";
@@ -16,13 +15,23 @@ import {StudentCalendarComponent} from "./pages/student/student-calendar/student
 import {StudentPartnersComponent} from "./pages/student/student-partners/student-partners.component";
 import {StudentTasksComponent} from "./pages/student/student-tasks/student-tasks.component";
 import {ProfileComponent} from "./pages/profile/profile.component";
+import {DeanUsersComponent} from "./pages/dean/dean-users/dean-users.component";
+import {DeanTasksComponent} from "./pages/dean/dean-tasks/dean-tasks.component";
+import {DeanAnnouncementsComponent} from "./pages/dean/dean-announcements/dean-announcements.component";
+import {DeanMarksComponent} from "./pages/dean/dean-marks/dean-marks.component";
+import {InviteComponent} from "./pages/invite/invite.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'invite/:code', component: InviteComponent},
   {
     path: 'dean', component: DeanLayoutComponent, children: [
-      {path: '', component: DeanComponent},
+      {path: 'announcements', component: DeanAnnouncementsComponent},
+      {path: 'tasks', component: DeanTasksComponent},
+      {path: 'users', component: DeanUsersComponent},
+      {path: 'marks', component: DeanMarksComponent},
+      {path: 'profile', component: ProfileComponent},
     ]
   },
   {

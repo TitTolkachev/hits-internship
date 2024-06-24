@@ -12,7 +12,6 @@ import {PartnerDetailComponent} from './partner-detail/partner-detail.component'
 import {CalendarComponent} from './pages/calendar/calendar.component';
 import {LoginComponent} from './pages/login/login.component';
 import {CookieService} from "ngx-cookie-service";
-import { DeanComponent } from './pages/dean/dean.component';
 import { MainComponent } from './pages/main/main.component';
 import {TokenInterceptorService} from "./services/token-interceptor.service";
 import { AdminLayoutComponent } from './pages/admin-layout/admin-layout.component';
@@ -26,6 +25,11 @@ import { StudentCalendarComponent } from './pages/student/student-calendar/stude
 import { StudentTasksComponent } from './pages/student/student-tasks/student-tasks.component';
 import { StudentPartnersComponent } from './pages/student/student-partners/student-partners.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { DeanMarksComponent } from './pages/dean/dean-marks/dean-marks.component';
+import { DeanAnnouncementsComponent } from './pages/dean/dean-announcements/dean-announcements.component';
+import { DeanTasksComponent } from './pages/dean/dean-tasks/dean-tasks.component';
+import { DeanUsersComponent } from './pages/dean/dean-users/dean-users.component';
+import { InviteComponent } from './pages/invite/invite.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,6 @@ import { ProfileComponent } from './pages/profile/profile.component';
     PartnersComponent,
     PartnerDetailComponent,
     LoginComponent,
-    DeanComponent,
     MainComponent,
     AdminLayoutComponent,
     StudentLayoutComponent,
@@ -48,7 +51,12 @@ import { ProfileComponent } from './pages/profile/profile.component';
     StudentCalendarComponent,
     StudentTasksComponent,
     StudentPartnersComponent,
-    ProfileComponent
+    ProfileComponent,
+    DeanMarksComponent,
+    DeanAnnouncementsComponent,
+    DeanTasksComponent,
+    DeanUsersComponent,
+    InviteComponent
   ],
   bootstrap: [AppComponent],
   imports: [
