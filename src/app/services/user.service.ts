@@ -24,4 +24,10 @@ export class UserService {
     const url = `${this.apiPrefix}/${login}`;
     return this.http.put<UserGetDto>(url, user);
   }
+
+  deleteUser(): Observable<VoidFunction> {
+    const url = `${this.apiPrefix}/`;
+    // @ts-ignore
+    return this.http.delete(url, user);
+  }
 }

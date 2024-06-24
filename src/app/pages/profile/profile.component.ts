@@ -30,4 +30,14 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
+  deleteUser(): void{
+    if (this.currentUser) {
+      this.userService.deleteUser().subscribe(() => {
+        // Опционально: Добавить уведомление о успешном обновлении
+      });
+    }
+  }
+
+  protected readonly Role = Role;
 }
