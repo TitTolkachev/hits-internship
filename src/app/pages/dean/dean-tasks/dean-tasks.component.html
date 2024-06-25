@@ -1,1 +1,55 @@
-<p>dean-tasks works!</p>
+<div class="container mt-4">
+  <h2>Список заданий</h2>
+  <button class="btn btn-primary mb-3" (click)="openAddTaskModal()">Добавить задание</button>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Задание</th>
+      <th>Дата создания</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{ task.id }}</td>
+      <td>{{ task.text }}</td>
+      <td>{{ task.createdAt | date }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Модальное окно для добавления задания -->
+<div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTaskModalLabel">Добавить задание</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addTask()">
+          <div class="form-group">
+            <label for="taskText">Текст задания</label>
+            <textarea class="form-control" id="taskText" [(ngModel)]="newTaskText" name="taskText" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="fileInput">Прикрепить файлы</label>
+            <input type="file" class="form-control-file" id="fileInput" (change)="onFileSelected($event)" multiple>
+          </div>
+          <div *ngIf="uploadingFiles.length > 0">
+            <div *ngFor="let file of uploadingFiles">
+              <p>{{ file.name }}</p>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" [style.width.%]="file.progress" [attr.aria-valuenow]="file.progress" aria-valuemin="0" aria-valuemax="100">{{ file.progress }}%</div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="isUploading">Добавить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

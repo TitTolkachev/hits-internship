@@ -1,1 +1,43 @@
-<p>dean-announcements works!</p>
+<div class="container mt-4">
+  <button class="btn btn-primary mb-3" (click)="openAddModal()">Добавить объявление</button>
+  <div class="list-group">
+    <div *ngFor="let announcement of announcements" class="list-group-item">
+      <h5>{{announcement.text}}</h5>
+      <p>{{announcement.name}} {{announcement.surname}} - {{announcement.createdAt | date}}</p>
+      <p>Комментариев: {{announcement.comments.length}}</p>
+      <button class="btn btn-secondary btn-sm" (click)="openEditModal(announcement)">Редактировать</button>
+      <button class="btn btn-danger btn-sm" (click)="deleteAnnouncement(announcement.id)">Удалить</button>
+      <div *ngFor="let comment of announcement.comments">
+        <div *ngIf="comment.id">
+          <small>{{comment.name}} {{comment.surname}}: {{comment.text}}</small>
+          <!-- Add buttons for editing and deleting comments if necessary -->
+        </div>
+      </div>
+      <form (ngSubmit)="addComment(announcement.id, commentText.value)">
+        <input type="text" #commentText class="form-control" placeholder="Добавить комментарий">
+        <button type="submit" class="btn btn-primary btn-sm mt-1">Отправить</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Announcement Modal -->
+<div #announcementModal class="modal fade" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="announcementModalLabel">{{isEditing ? 'Редактировать' : 'Добавить'}} объявление</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="saveAnnouncement()">
+          <div class="mb-3">
+            <label for="text" class="form-label">Текст</label>
+            <textarea id="text" class="form-control" [(ngModel)]="announcementText" name="text" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
