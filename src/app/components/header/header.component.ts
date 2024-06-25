@@ -1,10 +1,8 @@
 import {Component} from '@angular/core';
 import * as bootstrap from 'bootstrap'
 import {StreamService} from "../../services/stream.service";
-import {catchError, Observable, tap, throwError} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {UserLocation} from "../../models/userLocation";
-import {FRONT_URL} from "../../constants";
+import {FRONT_URL, SELECTED_STREAM_KEY} from "../../constants";
 import {InviteLink} from "../../models/inviteLink";
 
 @Component({
@@ -16,7 +14,7 @@ export class HeaderComponent {
   streams: string[] = [];
   newStreamName: string = '';
 
-  selectedStream: string | undefined = "9721";
+  selectedStream: string | undefined;
   createdLink: string | undefined;
 
   constructor(
@@ -25,14 +23,25 @@ export class HeaderComponent {
   }
 
   ngOnInit(): void {
-    this.loadStrings();
-    this.getIpClient()
+    this.loadStreams();
   }
 
-  loadStrings(): void {
-    this.streamService.getStrings().subscribe(
+  loadStreams(): void {
+    this.streamService.getStreams().subscribe(
       (data: string[]) => {
         this.streams = data;
+        let stream = localStorage.getItem(SELECTED_STREAM_KEY)
+        if (stream == null) {
+          if (data.length > 0) {
+            let selectedStream = data[0]
+            localStorage.setItem(SELECTED_STREAM_KEY, selectedStream)
+            this.selectedStream = selectedStream
+          }
+        } else if (data.includes(stream)) {
+          this.selectedStream = stream
+        } else {
+          localStorage.removeItem(SELECTED_STREAM_KEY)
+        }
       },
       (error) => {
         console.error('Error fetching strings', error);
@@ -43,6 +52,7 @@ export class HeaderComponent {
   selectStream(stream: string) {
     this.selectedStream = stream
     this.createdLink = undefined
+    localStorage.setItem(SELECTED_STREAM_KEY, stream)
   }
 
   openAddStreamModal() {
@@ -60,7 +70,6 @@ export class HeaderComponent {
   }
 
 
-
   addStream() {
     if (this.newStreamName) {
       this.streams.push(this.newStreamName);
@@ -73,27 +82,10 @@ export class HeaderComponent {
   }
 
   createInviteLink() {
-    if (this.selectedStream != null){
+    if (this.selectedStream != null) {
       this.streamService.createInviteLink(this.selectedStream).subscribe((linkModel: InviteLink) => {
         this.createdLink = `${FRONT_URL}/invite/${linkModel.code}`
       })
     }
   }
-
-
-  private async getIpClient() {
-    const resp = await fetch('http://geolocation-db.com/json/', {
-      method: 'GET'
-    })
-
-    if (!resp.ok) {
-      throw new Error(`Error! status: ${resp.status}`);
-    }
-
-    const userIpV4 = ((await resp.json()) as UserLocation).IPv4;
-
-    console.log('result is: ', userIpV4);
-
-  }
-
 }

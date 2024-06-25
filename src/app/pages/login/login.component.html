@@ -1,5 +1,5 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card p-4">
+  <div class="card p-4 position-relative">
     <h2 class="text-center">Вход</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group mb-3">
@@ -16,5 +16,21 @@
       <button type="submit" [attr.disabled]="state === 'loading' ? '' : null" class="btn btn-primary w-100">Войти
       </button>
     </form>
+    <div *ngIf="state === 'loading'" class="overlay d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
   </div>
 </div>
+
+<style>
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+</style>
