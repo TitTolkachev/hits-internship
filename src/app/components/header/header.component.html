@@ -17,6 +17,9 @@
       <li class="nav-item mx-2">
         <a class="nav-link btn btn-outline-primary" routerLink="/admin/partners" routerLinkActive="active">Partners</a>
       </li>
+      <li class="nav-item mx-2">
+        <a class="nav-link btn btn-outline-primary" routerLink="/admin/profile" routerLinkActive="active">Profile</a>
+      </li>
     </ul>
     <ul class="navbar-nav ms-auto">
       <li class="nav-item dropdown mx-2">
@@ -40,11 +43,19 @@
           <i class="bi bi-plus-circle"></i>
         </div>
       </li>
+
+      <li class="nav-item mx-2" *ngIf="selectedStream != null">
+        <div class="nav-link btn btn-outline-success" (click)="openCreateInviteLinkModal()">
+          <i class="bi bi-mailbox"></i>
+        </div>
+      </li>
+
+
     </ul>
   </div>
 </nav>
 
-<!-- Modal -->
+<!-- Add stream modal -->
 <div class="modal fade" id="addStreamModal" tabindex="-1" aria-labelledby="addStreamModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -61,6 +72,29 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
         <button type="button" class="btn btn-primary" (click)="addStream()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Invite modal -->
+<div class="modal fade" id="createInviteModal" tabindex="-1" aria-labelledby="addStreamModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createInviteModalLabel">Пригласительная ссылка</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="streamName" class="form-label">Выбранный поток: {{selectedStream}}</label>
+<!--          <h5 class="card-title">{{ selectedStream }}</h5>-->
+          <h5 class="card-title" *ngIf="createdLink != null">{{ createdLink }}</h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary" (click)="createInviteLink()">Создать</button>
       </div>
     </div>
   </div>

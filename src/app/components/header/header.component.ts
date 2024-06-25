@@ -1,6 +1,11 @@
 import {Component} from '@angular/core';
 import * as bootstrap from 'bootstrap'
 import {StreamService} from "../../services/stream.service";
+import {catchError, Observable, tap, throwError} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {UserLocation} from "../../models/userLocation";
+import {FRONT_URL} from "../../constants";
+import {InviteLink} from "../../models/inviteLink";
 
 @Component({
   selector: 'app-header',
@@ -11,11 +16,17 @@ export class HeaderComponent {
   streams: string[] = [];
   newStreamName: string = '';
 
-  constructor(private streamService: StreamService) {
+  selectedStream: string | undefined = "9721";
+  createdLink: string | undefined;
+
+  constructor(
+    private streamService: StreamService,
+    private http: HttpClient) {
   }
 
   ngOnInit(): void {
     this.loadStrings();
+    this.getIpClient()
   }
 
   loadStrings(): void {
@@ -29,8 +40,9 @@ export class HeaderComponent {
     );
   }
 
-  selectStream(stream: any) {
-    console.log('Selected stream:', stream.name);
+  selectStream(stream: string) {
+    this.selectedStream = stream
+    this.createdLink = undefined
   }
 
   openAddStreamModal() {
@@ -39,6 +51,15 @@ export class HeaderComponent {
     });
     addStreamModal.show();
   }
+
+  openCreateInviteLinkModal() {
+    const createInviteLinkModal = new bootstrap.Modal(document.getElementById('createInviteModal')!, {
+      keyboard: false
+    });
+    createInviteLinkModal.show();
+  }
+
+
 
   addStream() {
     if (this.newStreamName) {
@@ -50,4 +71,29 @@ export class HeaderComponent {
       }
     }
   }
+
+  createInviteLink() {
+    if (this.selectedStream != null){
+      this.streamService.createInviteLink(this.selectedStream).subscribe((linkModel: InviteLink) => {
+        this.createdLink = `${FRONT_URL}/invite/${linkModel.code}`
+      })
+    }
+  }
+
+
+  private async getIpClient() {
+    const resp = await fetch('http://geolocation-db.com/json/', {
+      method: 'GET'
+    })
+
+    if (!resp.ok) {
+      throw new Error(`Error! status: ${resp.status}`);
+    }
+
+    const userIpV4 = ((await resp.json()) as UserLocation).IPv4;
+
+    console.log('result is: ', userIpV4);
+
+  }
+
 }
