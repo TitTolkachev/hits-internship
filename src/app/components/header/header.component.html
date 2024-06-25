@@ -6,12 +6,6 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav me-auto">
       <li class="nav-item mx-2">
-        <a class="nav-link btn btn-outline-primary" routerLink="/admin/home" routerLinkActive="active">Home</a>
-      </li>
-      <li class="nav-item mx-2">
-        <a class="nav-link btn btn-outline-primary" routerLink="/admin/about" routerLinkActive="active">About</a>
-      </li>
-      <li class="nav-item mx-2">
         <a class="nav-link btn btn-outline-primary" routerLink="/admin/calendar" routerLinkActive="active">Calendar</a>
       </li>
       <li class="nav-item mx-2">
@@ -25,7 +19,7 @@
       <li class="nav-item dropdown mx-2">
         <a class="nav-link dropdown-toggle btn btn-outline-secondary" href="#" id="streamDropdown" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
-          Выберите поток
+          {{ selectedStream ? selectedStream : 'Выберите поток' }}
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="streamDropdown">
           <li *ngIf="!streams.length" class="m-4">
@@ -88,7 +82,6 @@
       <div class="modal-body">
         <div class="mb-3">
           <label for="streamName" class="form-label">Выбранный поток: {{selectedStream}}</label>
-<!--          <h5 class="card-title">{{ selectedStream }}</h5>-->
           <h5 class="card-title" *ngIf="createdLink != null">{{ createdLink }}</h5>
         </div>
       </div>

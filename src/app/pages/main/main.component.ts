@@ -23,7 +23,7 @@ export class MainComponent {
     }
     switch (role) {
       case "Admin":
-        this.router.navigateByUrl("/admin/home").then()
+        this.router.navigateByUrl("/admin").then()
         break
       case "Dean":
         this.router.navigateByUrl("/dean").then()

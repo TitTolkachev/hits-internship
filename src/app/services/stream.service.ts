@@ -12,7 +12,7 @@ export class StreamService {
   constructor(private http: HttpClient) {
   }
 
-  getStrings(): Observable<string[]> {
+  getStreams(): Observable<string[]> {
     return this.http.get<string[]>(`${SERVER_URL}/stream/get`);
   }
 
