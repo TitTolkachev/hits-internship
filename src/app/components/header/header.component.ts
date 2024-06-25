@@ -44,7 +44,7 @@ export class HeaderComponent {
         }
       },
       (error) => {
-        console.error('Error fetching strings', error);
+        console.error();
       }
     );
   }

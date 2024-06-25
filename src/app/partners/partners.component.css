@@ -1,17 +1,13 @@
-.container {
-  margin-top: 20px;
+.card {
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-.list-group-item {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.card:hover {
+  transform: scale(1.05);
 }
 
-.card-title {
-  font-weight: bold;
-}
-
-.card-text {
-  margin-bottom: 1rem;
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
 }

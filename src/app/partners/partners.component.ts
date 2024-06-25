@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import {PartnerListItem} from "./model/partner-list-item.model";
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import * as moment from 'moment';
+import {PartnerService} from "../services/partner.service";
+import {SELECTED_STREAM_KEY} from "../constants";
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-partners',
@@ -8,37 +12,60 @@ import {PartnerListItem} from "./model/partner-list-item.model";
   styleUrls: ['./partners.component.css']
 })
 export class PartnersComponent implements OnInit {
-  partners: PartnerListItem[] = [
-    {
-      id: '1',
-      name: 'Компания 1',
-      description: 'Описание компании 1',
-      nextMeetingDate: 1717238400000,
-    },
-    {
-      id: '2',
-      name: 'Компания 2',
-      description: 'Описание компании 2',
-      nextMeetingDate: 1717324800000
-    },
-    {
-      id: '3',
-      name: 'Компания 3',
-      description: 'Описание компании 3',
-      nextMeetingDate: 1717411200000
-    }
-  ];
+  partners: any[] = [];
+  loading = true;
+  newPartnerName = '';
+  error = '';
 
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {}
-
-  formatDate(epochMillis: number): string {
-    const date = new Date(epochMillis);
-    return date.toLocaleString();
+  constructor(private partnerService: PartnerService, private router: Router) {
   }
 
-  goToPartnerDetail(partner: PartnerListItem): void {
-    this.router.navigate(['/admin/partners', partner.id]);
+  ngOnInit(): void {
+    const streamName = localStorage.getItem(SELECTED_STREAM_KEY);
+    if (streamName) {
+      this.partnerService.getAllPartners(streamName).subscribe({
+        next: (data) => {
+          this.partners = data;
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Error fetching partners';
+          this.loading = false;
+        }
+      });
+    } else {
+      this.error = 'Stream name not found in local storage';
+      this.loading = false;
+    }
+  }
+
+  openModal(): void {
+    const modalElement = document.getElementById('partnerModal');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+  }
+
+  addPartner(): void {
+    const streamName = localStorage.getItem(SELECTED_STREAM_KEY);
+    if (this.newPartnerName && streamName) {
+      this.partnerService.createPartner({name: this.newPartnerName, streamName}).subscribe({
+        next: () => {
+          this.ngOnInit();
+          this.newPartnerName = '';
+          bootstrap.Modal.getInstance(document.getElementById('partnerModal')).hide();
+        },
+        error: () => {
+          this.error = 'Error adding partner';
+        }
+      });
+    }
+  }
+
+  viewPartner(partnerId: number): void {
+    this.router.navigate([`/admin/partners/${partnerId}`]).then();
+  }
+
+  formatTime(time: number): string {
+    return time ? moment.unix(time).format('DD.MM.YYYY, HH:mm') : 'Встреча не запланирована';
   }
 }

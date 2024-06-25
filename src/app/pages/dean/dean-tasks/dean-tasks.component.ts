@@ -74,7 +74,7 @@ export class DeanTasksComponent implements OnInit {
       upload.url = `https://s3.timeweb.cloud/${this.s3Service.bucketName}/${file.name}`;
       this.isUploading = false;
     } catch (error) {
-      console.error('File upload error:', error);
+      console.error();
       this.isUploading = false;
     }
   }

@@ -66,7 +66,7 @@ export class PartnerDetailComponent implements OnInit {
         this.editModal = new Modal(modalElement);
         console.log("Modal initialized");
       } else {
-        console.error("Modal element not found");
+        console.error();
       }
     }, 0);
   }
@@ -89,7 +89,7 @@ export class PartnerDetailComponent implements OnInit {
       this.editJobPositions = this.partner.jobPositions ? Object.entries(this.partner.jobPositions).map(([key, value]) => `${key}:${value}`).join(', ') : '';
       this.editModal?.show();
     } else {
-      console.error("Partner data is undefined");
+      console.error();
     }
   }
 
@@ -124,7 +124,7 @@ export class PartnerDetailComponent implements OnInit {
       this.partner.jobPositions = this.editJobPositions ? Object.fromEntries(this.editJobPositions.split(',').map(item => item.split(':').map(i => i.trim()))) : {};
       this.editModal?.hide();
     } else {
-      console.error("Partner data is undefined");
+      console.error();
     }
   }
 
