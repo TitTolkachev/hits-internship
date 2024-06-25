@@ -30,7 +30,7 @@ export class UserService {
   deleteUser(streamName: string): Observable<VoidFunction> {
     const url = `${SERVER_URL}/stream/leave/${streamName}`;
     // @ts-ignore
-    return this.http.post(url, user);
+    return this.http.post(url, "");
   }
 
   logout(): Observable<Object>{

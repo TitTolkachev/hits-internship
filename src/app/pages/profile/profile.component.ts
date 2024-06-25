@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCurrentUser();
+    this.closeDeleteAccountModal()
   }
 
   loadCurrentUser(): void {
@@ -48,7 +49,7 @@ export class ProfileComponent implements OnInit {
   openDeleteAccountModal(): void {
     const exitModal = document.getElementById('deleteAccountModal');
     if (exitModal) {
-      exitModal.style.display = 'block';
+      exitModal.style.display = 'flex';
     }
   }
 
