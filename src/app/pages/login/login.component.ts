@@ -35,7 +35,7 @@ export class LoginComponent {
         localStorage.setItem(ROLE_KEY, role)
 
         if (role == 'Admin') {
-          this.router.navigateByUrl("/admin/home").then()
+          this.router.navigateByUrl("/admin").then()
           return;
         }
         if (role == 'Dean') {
