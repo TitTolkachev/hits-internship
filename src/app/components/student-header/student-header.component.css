@@ -12,7 +12,6 @@
   height: 100%; /* Полная высота */
   overflow: auto; /* Включить прокрутку, если необходимо */
   background-color: rgba(0, 0, 0, 0.6); /* Черный цвет с прозрачностью */
-  display: flex;
   align-items: center;
   justify-content: center;
 }

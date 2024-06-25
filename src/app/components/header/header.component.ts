@@ -4,6 +4,9 @@ import {StreamService} from "../../services/stream.service";
 import {HttpClient} from "@angular/common/http";
 import {FRONT_URL, SELECTED_STREAM_KEY} from "../../constants";
 import {InviteLink} from "../../models/inviteLink";
+import {UserService} from "../../services/user.service";
+import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -19,7 +22,10 @@ export class HeaderComponent {
 
   constructor(
     private streamService: StreamService,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private router: Router,
+    private userService: UserService,
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -87,5 +93,27 @@ export class HeaderComponent {
         this.createdLink = `${FRONT_URL}/invite/${linkModel.code}`
       })
     }
+  }
+
+  openExitModal(): void {
+    const logoutModal = document.getElementById('logoutModal');
+    if (logoutModal) {
+      logoutModal.style.display = 'flex';
+    }
+  }
+
+  closeExitModal(): void {
+    const logoutModal = document.getElementById('logoutModal');
+    if (logoutModal) {
+      logoutModal.style.display = 'none';
+    }
+  }
+
+  logout(): void {
+    this.userService.logout().subscribe(result => {
+      this.authService.signOut()
+      this.router.navigateByUrl("").then();
+    })
+    this.closeExitModal();
   }
 }
