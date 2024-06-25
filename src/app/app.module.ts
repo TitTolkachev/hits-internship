@@ -28,6 +28,7 @@ import { DeanAnnouncementsComponent } from './pages/dean/dean-announcements/dean
 import { DeanTasksComponent } from './pages/dean/dean-tasks/dean-tasks.component';
 import { DeanUsersComponent } from './pages/dean/dean-users/dean-users.component';
 import { InviteComponent } from './pages/invite/invite.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [

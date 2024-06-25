@@ -31,4 +31,9 @@ export class UserService {
     // @ts-ignore
     return this.http.post(url, user);
   }
+
+  logout(): Observable<Object>{
+    const url = `${SERVER_URL}/user/logout`;
+    return this.http.post(url, "");
+  }
 }

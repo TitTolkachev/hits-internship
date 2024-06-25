@@ -1,1 +1,44 @@
-<p>invite works!</p>
+<div class="full-screen-container" *ngIf="!isLoading">
+  <form (ngSubmit)="onSubmit()">
+    <div class="flow-info">
+      <h3>Вас пригласили в учебный поток!</h3>
+      <p><strong>Название потока:</strong> {{flow.name}}</p>
+      <p><strong>Количество участников:</strong> {{flow.participants}}</p>
+    </div>
+    <div class="form-group">
+      <label for="login">Логин</label>
+      <input type="text" id="login" [(ngModel)]="student.login" name="login" required/>
+    </div>
+    <div class="form-group">
+      <label for="password">Пароль</label>
+      <input type="password" id="password" [(ngModel)]="student.password" name="password" required/>
+    </div>
+    <div class="form-group">
+      <label for="firstName">Имя</label>
+      <input type="text" id="firstName" [(ngModel)]="student.firstName" name="firstName" required/>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Фамилия</label>
+      <input type="text" id="lastName" [(ngModel)]="student.lastName" name="lastName" required/>
+    </div>
+
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+</div>
+
+<div *ngIf="isLoading" class="overlay d-flex justify-content-center align-items-center">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<style>
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+</style>

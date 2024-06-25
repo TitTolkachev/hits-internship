@@ -34,7 +34,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.ico"
             ],
             "styles": [
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",

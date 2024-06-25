@@ -15,7 +15,21 @@
     <div class="ms-auto">
       <button class="btn btn-outline-primary mx-2" routerLink="/student/profile" routerLinkActive="active">Профиль
       </button>
-      <button class="btn btn-danger">Выйти</button>
+      <button class="btn btn-danger" (click)="openExitModal()">Выйти</button>
     </div>
   </div>
 </nav>
+
+
+<!-- Модальное окно -->
+<div id="logoutModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" (click)="closeExitModal()">&times;</span>
+    <h2>Выход из аккаунта</h2>
+    <p>Вы уверены, что хотите выйти?</p>
+    <div class="modal-buttons">
+      <button class="logout-button" (click)="logout()">Выйти</button>
+      <button class="cancel-button" (click)="closeExitModal()">Отмена</button>
+    </div>
+  </div>
+</div>
