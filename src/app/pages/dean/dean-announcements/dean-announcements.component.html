@@ -1,19 +1,28 @@
 <div class="container mt-4">
   <button class="btn btn-primary mb-3" (click)="openAddModal()">Добавить объявление</button>
-  <div class="list-group">
-    <div *ngFor="let announcement of announcements" class="list-group-item">
-      <h5>{{announcement.text}}</h5>
-      <p>{{announcement.name}} {{announcement.surname}} - {{announcement.createdAt | date}}</p>
+
+  <div *ngIf="isLoading" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+  </div>
+
+  <div class="list-group" *ngIf="!isLoading">
+    <div *ngFor="let announcement of announcements" class="list-group-item mb-3">
+      <p class="announcement-text">{{announcement.text}}</p>
+      <p class="announcement-author">{{announcement.name}} {{announcement.surname}} -
+        {{announcement.updatedAt != announcement.createdAt ? formatDate(announcement.updatedAt, true) : formatDate(announcement.createdAt)}}</p>
       <p>Комментариев: {{announcement.comments.length}}</p>
       <button class="btn btn-secondary btn-sm" (click)="openEditModal(announcement)">Редактировать</button>
       <button class="btn btn-danger btn-sm" (click)="deleteAnnouncement(announcement.id)">Удалить</button>
-      <div *ngFor="let comment of announcement.comments">
+      <div *ngFor="let comment of announcement.comments" class="comment mt-2">
         <div *ngIf="comment.id">
-          <small>{{comment.name}} {{comment.surname}}: {{comment.text}}</small>
+          <small>{{comment.name}} {{comment.surname}}: {{comment.text}} -
+            {{comment.updatedAt != comment.createdAt ? formatDate(comment.updatedAt, true) : formatDate(comment.createdAt)}}</small>
           <!-- Add buttons for editing and deleting comments if necessary -->
         </div>
       </div>
-      <form (ngSubmit)="addComment(announcement.id, commentText.value)">
+      <form (ngSubmit)="addComment(announcement.id, commentText.value)" class="mt-2">
         <input type="text" #commentText class="form-control" placeholder="Добавить комментарий">
         <button type="submit" class="btn btn-primary btn-sm mt-1">Отправить</button>
       </form>

@@ -25,7 +25,7 @@ export class AnnouncementService {
   }
 
   deleteAnnouncement(id: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/announcements/delete`, {id});
+    return this.http.delete(`${this.baseUrl}/announcements/delete`, {body: {id}});
   }
 
   createComment(id: number, text: string): Observable<any> {
@@ -33,10 +33,10 @@ export class AnnouncementService {
   }
 
   updateComment(id: number, text: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/announcements/comments/update`, {id, text});
+    return this.http.patch(`${this.baseUrl}/announcements/comments/update`, {id, text});
   }
 
   deleteComment(id: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/announcements/comments/delete`, {id});
+    return this.http.delete(`${this.baseUrl}/announcements/comments/delete`, {body: {id}});
   }
 }
