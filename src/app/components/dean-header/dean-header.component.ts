@@ -22,7 +22,7 @@ export class DeanHeaderComponent implements OnInit {
   openExitModal(): void {
     const exitModal = document.getElementById('logoutModal');
     if (exitModal) {
-      exitModal.style.display = 'block';
+      exitModal.style.display = 'flex';
     }
   }
 
