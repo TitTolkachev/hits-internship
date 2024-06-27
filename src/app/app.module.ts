@@ -28,8 +28,8 @@ import { DeanAnnouncementsComponent } from './pages/dean/dean-announcements/dean
 import { DeanTasksComponent } from './pages/dean/dean-tasks/dean-tasks.component';
 import { DeanUsersComponent } from './pages/dean/dean-users/dean-users.component';
 import { InviteComponent } from './pages/invite/invite.component';
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { AdminStudentsComponent } from './pages/admin/admin-students/admin-students.component';
+import { AdminAnnouncementsComponent } from './pages/admin/admin-announcements/admin-announcements.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,8 @@ import { AdminStudentsComponent } from './pages/admin/admin-students/admin-stude
     DeanTasksComponent,
     DeanUsersComponent,
     InviteComponent,
-    AdminStudentsComponent
+    AdminStudentsComponent,
+    AdminAnnouncementsComponent
   ],
   bootstrap: [AppComponent],
   imports: [

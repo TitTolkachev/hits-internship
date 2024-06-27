@@ -19,6 +19,7 @@ import {DeanAnnouncementsComponent} from "./pages/dean/dean-announcements/dean-a
 import {DeanMarksComponent} from "./pages/dean/dean-marks/dean-marks.component";
 import {InviteComponent} from "./pages/invite/invite.component";
 import {AdminStudentsComponent} from "./pages/admin/admin-students/admin-students.component";
+import {AdminAnnouncementsComponent} from "./pages/admin/admin-announcements/admin-announcements.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -44,6 +45,7 @@ const routes: Routes = [
   },
   {
     path: 'admin', component: AdminLayoutComponent, children: [
+      {path: 'announcements', component: AdminAnnouncementsComponent},
       {path: 'calendar', component: CalendarComponent},
       {path: 'partners', component: PartnersComponent},
       {path: 'students', component: AdminStudentsComponent},
