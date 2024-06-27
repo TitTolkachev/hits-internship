@@ -2,7 +2,7 @@
   <div class="container position-relative d-flex justify-content-between align-items-center">
 
     <ul class="navbar-nav me-auto">
-      <li class="nav-item dropdown mx-2">
+      <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle btn btn-outline-secondary" href="#" id="streamDropdown" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">
           {{ selectedStream ? selectedStream : 'Выберите поток' }}
@@ -18,14 +18,14 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item mx-2">
+      <li class="nav-item">
         <div class="nav-link btn btn-outline-success" (click)="openAddStreamModal()">
           <i class="bi bi-plus-circle"></i>
         </div>
       </li>
-      <li class="nav-item mx-2" *ngIf="selectedStream != null">
+      <li class="nav-item" *ngIf="selectedStream != null">
         <div class="nav-link btn btn-outline-success" (click)="openCreateInviteLinkModal()">
-          <i class="bi bi-mailbox"></i>
+          <i class="bi bi-link-45deg"></i>
         </div>
       </li>
     </ul>
@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
         <button type="button" class="btn btn-primary" (click)="addStream()">Сохранить</button>
       </div>
     </div>
@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
         <button type="button" class="btn btn-primary" (click)="createInviteLink()">Создать</button>
       </div>
     </div>

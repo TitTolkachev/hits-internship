@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import * as bootstrap from 'bootstrap'
 import {StreamService} from "../../services/stream.service";
 import {HttpClient} from "@angular/common/http";
-import {FRONT_URL, SELECTED_STREAM_KEY} from "../../constants";
+import {FRONT_URL, SELECTED_STREAM_KEY, SERVER_URL} from "../../constants";
 import {InviteLink} from "../../models/inviteLink";
 import {UserService} from "../../services/user.service";
 import {AuthService} from "../../services/auth.service";
@@ -49,7 +49,7 @@ export class HeaderComponent {
           localStorage.removeItem(SELECTED_STREAM_KEY)
         }
       },
-      (error) => {
+      () => {
         console.error();
       }
     );
@@ -75,17 +75,27 @@ export class HeaderComponent {
     createInviteLinkModal.show();
   }
 
-
   addStream() {
     if (this.newStreamName) {
-      this.streams.push(this.newStreamName);
-      this.newStreamName = '';
-      const addStreamModal = bootstrap.Modal.getInstance(document.getElementById('addStreamModal')!);
-      if (addStreamModal) {
-        addStreamModal.hide();
-      }
+      this.http.post(`${SERVER_URL}/stream/create`, {name: this.newStreamName}).subscribe({
+        next: () => {
+          this.streams.push(this.newStreamName);
+          this.selectedStream = this.newStreamName;
+          localStorage.setItem(SELECTED_STREAM_KEY, this.newStreamName)
+          this.newStreamName = '';
+          const addStreamModal = bootstrap.Modal.getInstance(document.getElementById('addStreamModal')!);
+          if (addStreamModal) {
+            addStreamModal.hide();
+          }
+          this.router.navigateByUrl("").then();
+        },
+        error: (error) => {
+          console.error('There was a problem with the request:', error);
+        }
+      });
     }
   }
+
 
   createInviteLink() {
     if (this.selectedStream != null) {
@@ -110,7 +120,7 @@ export class HeaderComponent {
   }
 
   logout(): void {
-    this.userService.logout().subscribe(result => {
+    this.userService.logout().subscribe(() => {
       this.authService.signOut()
       this.router.navigateByUrl("").then();
     })
