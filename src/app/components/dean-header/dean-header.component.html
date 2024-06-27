@@ -1,5 +1,35 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container w-100 position-relative d-flex justify-content-between align-items-center">
+
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle btn btn-outline-secondary" href="#" id="streamDropdown" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">
+          {{ selectedStream ? selectedStream : 'Выберите поток' }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="streamDropdown">
+          <li *ngIf="!streams.length" class="m-4">
+            <p>Список потоков пуст</p>
+          </li>
+          <li *ngIf="streams.length">
+            <div *ngFor="let stream of streams" (click)="selectStream(stream)">
+              <a class="dropdown-item" href="#">{{ stream }}</a>
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <div class="nav-link btn btn-outline-success" (click)="openAddStreamModal()">
+          <i class="bi bi-plus-circle"></i>
+        </div>
+      </li>
+      <li class="nav-item" *ngIf="selectedStream != null">
+        <div class="nav-link btn btn-outline-success" (click)="openCreateInviteLinkModal()">
+          <i class="bi bi-link-45deg"></i>
+        </div>
+      </li>
+    </ul>
+
     <div class="position-absolute start-50 translate-middle-x">
       <div class="navbar-nav">
         <button class="btn btn-outline-primary mx-2" routerLink="/dean/announcements" routerLinkActive="active">Объявления
@@ -20,6 +50,50 @@
   </div>
 </nav>
 
+<!-- Add stream modal -->
+<div class="modal fade" id="addStreamModal" tabindex="-1" aria-labelledby="addStreamModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStreamModalLabel">Добавить новый поток</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="streamName" class="form-label">Название потока</label>
+          <input type="text" class="form-control" id="streamName" [(ngModel)]="newStreamName">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="addStream()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Invite modal -->
+<div class="modal fade" id="createInviteModal" tabindex="-1" aria-labelledby="addStreamModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createInviteModalLabel">Пригласительная ссылка</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="streamName" class="form-label">Выбранный поток: {{selectedStream}}</label>
+          <h5 class="card-title" *ngIf="createdLink != null">{{ createdLink }}</h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="createInviteLink()">Создать</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Модальное окно -->
 <div id="logoutModal" class="modal">
   <div class="modal-content">
@@ -32,3 +106,5 @@
     </div>
   </div>
 </div>
+
+

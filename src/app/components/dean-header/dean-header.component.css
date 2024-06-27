@@ -1,5 +1,33 @@
+.nav-item .nav-link {
+  margin: 0 5px;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-outline-success {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.navbar-nav {
+  flex-direction: row;
+}
+
 /* Стили для модального окна */
-.modal {
+#logoutModal {
   display: none; /* Скрыто по умолчанию */
   position: fixed; /* Оставаться на месте */
   z-index: 1; /* Слой выше всего */
