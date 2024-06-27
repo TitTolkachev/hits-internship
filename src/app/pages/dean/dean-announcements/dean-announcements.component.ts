@@ -115,8 +115,7 @@ export class DeanAnnouncementsComponent implements OnInit {
         text: this.currentCommentText
       }).subscribe(() => {
         this.loadAnnouncements();
-        const myModal = new bootstrap.Modal(document.getElementById('commentModal'));
-        myModal.hide();
+        this.closeModal('commentModal')
       });
     } else {
       this.closeModal('commentModal')

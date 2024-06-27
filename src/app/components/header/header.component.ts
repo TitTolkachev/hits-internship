@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import * as bootstrap from 'bootstrap'
 import {StreamService} from "../../services/stream.service";
 import {HttpClient} from "@angular/common/http";
 import {FRONT_URL, SELECTED_STREAM_KEY, SERVER_URL} from "../../constants";
@@ -7,6 +6,8 @@ import {InviteLink} from "../../models/inviteLink";
 import {UserService} from "../../services/user.service";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-header',
@@ -106,17 +107,8 @@ export class HeaderComponent {
   }
 
   openExitModal(): void {
-    const logoutModal = document.getElementById('logoutModal');
-    if (logoutModal) {
-      logoutModal.style.display = 'flex';
-    }
-  }
-
-  closeExitModal(): void {
-    const logoutModal = document.getElementById('logoutModal');
-    if (logoutModal) {
-      logoutModal.style.display = 'none';
-    }
+    const myModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+    myModal.show();
   }
 
   logout(): void {
@@ -124,6 +116,7 @@ export class HeaderComponent {
       this.authService.signOut()
       this.router.navigateByUrl("").then();
     })
-    this.closeExitModal();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('logoutModal'));
+    modal.hide();
   }
 }

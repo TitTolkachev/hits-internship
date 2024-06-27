@@ -4,9 +4,10 @@ import {UserService} from "../../services/user.service";
 import {AuthService} from "../../services/auth.service";
 import {FRONT_URL, SELECTED_STREAM_KEY, SERVER_URL} from "../../constants";
 import {StreamService} from "../../services/stream.service";
-import * as bootstrap from "bootstrap";
 import {InviteLink} from "../../models/inviteLink";
 import {HttpClient} from "@angular/common/http";
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-dean-header',
@@ -28,7 +29,6 @@ export class DeanHeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.closeExitModal()
     this.loadStreams();
   }
 
@@ -106,24 +106,16 @@ export class DeanHeaderComponent implements OnInit {
   }
 
   openExitModal(): void {
-    const exitModal = document.getElementById('logoutModal');
-    if (exitModal) {
-      exitModal.style.display = 'flex';
-    }
-  }
-
-  closeExitModal(): void {
-    const modal = document.getElementById('logoutModal');
-    if (modal) {
-      modal.style.display = 'none';
-    }
+    const myModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+    myModal.show();
   }
 
   logout(): void {
-    this.userService.logout().subscribe(result => {
+    this.userService.logout().subscribe(() => {
       this.authService.signOut()
       this.router.navigateByUrl("").then();
     })
-    this.closeExitModal();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('logoutModal'));
+    modal.hide();
   }
 }

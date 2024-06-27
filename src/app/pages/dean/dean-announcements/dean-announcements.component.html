@@ -22,7 +22,7 @@
         <div>
           <small>{{comment.name}} {{comment.surname}} - {{comment.updatedAt != comment.createdAt ? formatDate(comment.updatedAt, true) : formatDate(comment.createdAt)}}
           </small>
-          <span *ngIf="comment.authorId === currentUserId" class="float-end">
+          <span *ngIf="comment.userId === currentUserId" class="float-end">
             <button class="btn btn-outline-secondary btn-sm" (click)="openEditCommentModal(comment)"><i class="bi bi-pencil"></i></button>
             <button class="btn btn-outline-danger btn-sm ms-2" (click)="deleteComment(comment.id)"><i class="bi bi-trash"></i></button>
           </span>

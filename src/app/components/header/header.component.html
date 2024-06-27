@@ -93,15 +93,19 @@
   </div>
 </div>
 
-<!-- Модальное окно -->
-<div id="logoutModal" class="modal">
-  <div class="modal-content">
-    <span class="close-button" (click)="closeExitModal()">&times;</span>
-    <h2>Выход из аккаунта</h2>
-    <p>Вы уверены, что хотите выйти?</p>
-    <div class="modal-buttons">
-      <button class="cancel-button" (click)="closeExitModal()">Отмена</button>
-      <button class="logout-button" (click)="logout()">Выйти</button>
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">Выход из аккаунта</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">Вы уверены, что хотите выйти?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-danger" (click)="logout()">Выйти</button>
+      </div>
     </div>
   </div>
 </div>

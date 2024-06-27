@@ -1,14 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
 import {AuthService} from "../../services/auth.service";
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-student-header',
   templateUrl: './student-header.component.html',
   styleUrl: './student-header.component.css'
 })
-export class StudentHeaderComponent implements OnInit {
+export class StudentHeaderComponent {
 
   constructor(
     private router: Router,
@@ -17,29 +19,17 @@ export class StudentHeaderComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-    this.closeExitModal()
-  }
-
   openExitModal(): void {
-    const modal = document.getElementById('logoutModal');
-    if (modal) {
-      modal.style.display = 'flex';
-    }
-  }
-
-  closeExitModal(): void {
-    const modal = document.getElementById('logoutModal');
-    if (modal) {
-      modal.style.display = 'none';
-    }
+    const myModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+    myModal.show();
   }
 
   logout(): void {
-    this.userService.logout().subscribe(result => {
+    this.userService.logout().subscribe(() => {
       this.authService.signOut()
       this.router.navigateByUrl("").then();
     })
-    this.closeExitModal();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('logoutModal'));
+    modal.hide();
   }
 }
