@@ -23,13 +23,13 @@ export class MainComponent {
     }
     switch (role) {
       case "Admin":
-        this.router.navigateByUrl("/admin").then()
+        this.router.navigateByUrl("/admin/announcements").then()
         break
       case "Dean":
-        this.router.navigateByUrl("/dean").then()
+        this.router.navigateByUrl("/dean/announcements").then()
         break
       case "Student":
-        this.router.navigateByUrl("/student").then()
+        this.router.navigateByUrl("/student/announcements").then()
         break
       default:
         localStorage.removeItem(ROLE_KEY)
