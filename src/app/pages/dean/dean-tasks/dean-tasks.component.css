@@ -1,0 +1,77 @@
+.card {
+  margin-bottom: 1rem;
+}
+.card-body {
+  position: relative;
+}
+.input-group {
+  margin-top: 1rem;
+}
+
+
+
+
+.file-list {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+}
+
+.card2 {
+  position: relative;
+  width: 200px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card2:hover {
+  transform: scale(1.05);
+}
+
+.card2-body {
+  padding: 1rem;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+}
+
+.loading {
+  pointer-events: none;
+}
+
+.upload-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.upload-btn:hover {
+  background-color: #0056b3;
+}

@@ -32,6 +32,7 @@ const routes: Routes = [
       {path: 'users', component: DeanUsersComponent},
       {path: 'marks', component: DeanMarksComponent},
       {path: 'profile', component: ProfileComponent},
+      {path: 'task/:id', component: ProfileComponent},
     ]
   },
   {

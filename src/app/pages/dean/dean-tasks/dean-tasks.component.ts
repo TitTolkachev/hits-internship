@@ -1,13 +1,12 @@
-import * as bootstrap from 'bootstrap';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {S3Service} from "../../../services/s3.service";
+import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {jwtDecode} from "jwt-decode";
+import {Jwt} from "../../../models/jwt";
+import {Router} from "@angular/router";
 
-interface Task {
-  id: number;
-  text: string;
-  createdAt: Date;
-}
+declare var bootstrap: any;
 
 interface UploadingFile {
   name: string;
@@ -21,42 +20,138 @@ interface UploadingFile {
   styleUrls: ['./dean-tasks.component.css']
 })
 export class DeanTasksComponent implements OnInit {
-  tasks: Task[] = [];
-  newTaskText = '';
   uploadingFiles: UploadingFile[] = [];
   isUploading = false;
-  addTaskModal: bootstrap.Modal | undefined;
 
-  constructor(private http: HttpClient, private s3Service: S3Service) { }
+  tasks: any[] = [];
+  newCommentText: { [key: number]: string } = {};
+  currentTaskText: string = '';
+  currentUserId: number = 1;
+  isEditingAnnouncement: boolean = false;
+  currentAnnouncementId: number | null = null;
+  streamName: string = localStorage.getItem(SELECTED_STREAM_KEY) || '';
 
-  ngOnInit(): void {
-    this.loadTasks();
+  selectedDate: string = '';
+  selectedTime: string = '';
+
+  constructor(private http: HttpClient, private s3Service: S3Service, private router: Router) {
   }
 
-  loadTasks() {
-    this.http.get<Task[]>('/api/tasks').subscribe((data: Task[]) => {
+  ngOnInit(): void {
+    this.loadAnnouncements();
+    let token = localStorage.getItem(ACCESS_TOKEN_KEY)
+    if (token != null) {
+      let id = jwtDecode<Jwt>(token).sub
+      this.currentUserId = Number(id)
+    }
+  }
+
+  loadAnnouncements() {
+    this.http.get(`${SERVER_URL}/task/get/all/${this.streamName}`).subscribe((data: any) => {
       this.tasks = data;
     });
   }
 
-  openAddTaskModal() {
-    const modalElement = document.getElementById('addTaskModal');
-    if (modalElement) {
-      this.addTaskModal = new bootstrap.Modal(modalElement);
-      this.addTaskModal.show();
+  openCreateAnnouncementModal() {
+    this.isEditingAnnouncement = false;
+    this.currentTaskText = '';
+    this.selectedDate = '';
+    this.selectedTime = '';
+    this.uploadingFiles = []
+    const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
+    myModal.show();
+  }
+
+  openEditAnnouncementModal(announcement: any) {
+    this.isEditingAnnouncement = true;
+    this.currentAnnouncementId = announcement.id;
+    this.currentTaskText = announcement.text;
+    const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
+    myModal.show();
+  }
+
+  saveAnnouncement() {
+    const dateTime = new Date(`${this.selectedDate}T${this.selectedTime}:00`);
+    const epochTime = Math.floor(dateTime.getTime() / 1000);
+
+    if (this.isEditingAnnouncement) {
+      this.http.patch(`${SERVER_URL}/announcements/update`, {
+        id: this.currentAnnouncementId,
+        text: this.currentTaskText
+      }).subscribe(() => {
+        this.closeModal('announcementModal')
+        this.loadAnnouncements();
+      });
+    } else {
+      this.http.post(`${SERVER_URL}/task/create/${this.streamName}`, {
+        text: this.currentTaskText,
+        deadlineDate : epochTime,
+        attachments: this.uploadingFiles.map((file)=>{return file.url}),
+      }).subscribe(() => {
+        this.closeModal('announcementModal')
+        this.loadAnnouncements();
+      });
     }
   }
 
-  closeAddTaskModal() {
-    if (this.addTaskModal) {
-      this.addTaskModal.hide();
-    }
+  confirmDeleteAnnouncement(id: number) {
+    this.currentAnnouncementId = id;
+    const myModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+    myModal.show();
+  }
+
+  addComment(announcementId: number) {
+    this.http.post(`${SERVER_URL}/announcements/comments/create`, {
+      id: announcementId,
+      text: this.newCommentText[announcementId]
+    }).subscribe(() => {
+      this.loadAnnouncements();
+      this.newCommentText[announcementId] = '';
+    });
+  }
+
+  deleteAnnouncement() {
+    this.http.delete(`${SERVER_URL}/announcements/delete`, {
+      body: {id: this.currentAnnouncementId}
+    }).subscribe(() => {
+      this.loadAnnouncements();
+      this.closeModal('deleteConfirmationModal')
+    });
+  }
+
+  formatDate(timestamp: number, updated: boolean = false): string {
+
+    // Создаем объект Date из переданного timestamp
+    const date = new Date(timestamp * 1000);
+
+    // Получаем компоненты даты
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // месяцы от 0 до 11, поэтому добавляем 1
+    const year = date.getFullYear();
+
+    // Получаем компоненты времени
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    // Форматируем в нужный формат
+    const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
+
+    return updated ? `${formattedDate} (изменено)` : formattedDate;
+  }
+
+  closeModal(modalId: string) {
+    const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+    modal.hide();
+  }
+
+  openTask(taskId: string) {
+    this.router.navigateByUrl(`/dean/task/${taskId}`).then()
   }
 
   onFileSelected(event: any) {
     const files = event.target.files;
     for (let i = 0; i < files.length; i++) {
-      this.uploadFile(files[i]);
+      this.uploadFile(files[i]).then();
     }
   }
 
@@ -69,7 +164,7 @@ export class DeanTasksComponent implements OnInit {
     this.isUploading = true;
 
     try {
-      const data = await this.s3Service.uploadFile(file);
+      await this.s3Service.uploadFile(file);
       upload.progress = 100;
       upload.url = `https://s3.timeweb.cloud/${this.s3Service.bucketName}/${file.name}`;
       this.isUploading = false;
@@ -79,17 +174,17 @@ export class DeanTasksComponent implements OnInit {
     }
   }
 
-  addTask() {
-    const task = {
-      text: this.newTaskText,
-      files: this.uploadingFiles.map(file => file.url)
-    };
+  openFile(file: any): void {
+    if (file.progress === 100 && file.url) {
+      window.open(file.url, '_blank');
+    }
+  }
 
-    this.http.post('/api/tasks', task).subscribe(() => {
-      this.loadTasks();
-      this.newTaskText = '';
-      this.uploadingFiles = [];
-      this.closeAddTaskModal();
-    });
+  openFileByUrl(url: any): void {
+    window.open(url, '_blank');
+  }
+
+  removeFile(index: number): void {
+    this.uploadingFiles.splice(index, 1);
   }
 }
