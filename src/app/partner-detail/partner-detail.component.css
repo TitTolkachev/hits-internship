@@ -1,17 +1,31 @@
-.container {
-  margin-top: 20px;
+/* partner-detail.component.css */
+.modal-body .form-label {
+  margin-bottom: 0.5rem;
 }
 
-.modal-content {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.modal-body .form-control,
+.modal-body .form-select {
+  margin-bottom: 1rem;
 }
 
-.modal-title {
-  font-weight: bold;
+.modal-body .form-select {
+  font-size: 1.2rem;
 }
 
-.btn {
-  margin-top: 10px;
+.card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-body {
+  text-align: center;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
 }

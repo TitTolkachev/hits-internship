@@ -1,69 +1,156 @@
-<div class="container" *ngIf="partner">
-  <h2>{{ partner?.name }}</h2>
-  <p>{{ partner?.description }}</p>
-  <p><strong>Дата ближайшей встречи:</strong> {{ partner ? formatDate(partner.nextMeetingDate) : '' }}</p>
-  <p><strong>Контактное лицо в компании:</strong> {{ partner?.companyContact?.email }}, {{ partner?.companyContact?.telegram }}</p>
-  <p><strong>Контактное лицо на факультете:</strong> {{ partner?.facultyContact?.firstName }} {{ partner?.facultyContact?.lastName }}</p>
-  <p><strong>Количество студентов с офферами:</strong> {{ partner?.studentOffers?.length }}</p>
-  <ul>
-    <li *ngFor="let job of partner?.jobPositions | keyvalue">
-      <strong>{{ job.key }}:</strong> {{ job.value }}
+<div class="container mt-5">
+  <h2>
+    {{ company.name }}
+    <button class="btn btn-outline-secondary btn-sm ms-2" (click)="openEditCompanyModal()">
+      <i class="bi bi-pencil"></i>
+    </button>
+  </h2>
+  <p><strong>Контактное лицо компании:</strong> {{ company.companyContact || 'Нет данных' }}</p>
+  <p><strong>Контактное лицо HITs:</strong> {{ company.hitsContact || 'Нет данных' }}</p>
+
+  <h3>Студенты</h3>
+  <ul class="list-group mb-3">
+    <li *ngFor="let student of company.students" class="list-group-item">
+      {{ student.name }} {{ student.surname }}
+    </li>
+    <li *ngIf="company.students.length === 0" class="list-group-item text-muted">
+      Нет студентов, закрепленных за этой компанией.
     </li>
   </ul>
-  <button class="btn btn-primary" (click)="openEditModal()">Редактировать</button>
 
-  <!-- Modal для редактирования информации о партнёре -->
-  <div class="modal fade" id="editPartnerModal" tabindex="-1" aria-labelledby="editPartnerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editPartnerModalLabel">Редактировать информацию о партнёре</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+  <h3>Позиции на стажировку</h3>
+  <div class="row">
+    <div *ngFor="let position of positions" class="col-md-4 mb-3">
+      <div class="card" (click)="openEditModal(position)">
+        <div class="card-body">
+          <h5 class="card-title">{{ position.stackName }}</h5>
+          <p class="card-text">Количество мест: {{ position.positionNum }}</p>
         </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="partnerName" class="form-label">Название компании</label>
-              <input type="text" class="form-control" id="partnerName" [(ngModel)]="editPartnerName" name="partnerName">
+      </div>
+    </div>
+  </div>
+  <ng-template #noPositions>
+    <p>Нет доступных позиций для стажировки.</p>
+  </ng-template>
+
+  <button class="btn btn-primary" (click)="openModal()">Добавить позицию</button>
+</div>
+
+<!-- Модальное окно для добавления позиции -->
+<div class="modal fade" id="addPositionModal" tabindex="-1" aria-labelledby="addPositionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPositionModalLabel">Добавить новую позицию</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addPosition()">
+          <div class="mb-3">
+            <label for="stackSelect" class="form-label">Выберите стек</label>
+            <div class="input-group">
+              <select id="stackSelect" class="form-select" [(ngModel)]="newPosition.stackId" name="stackId" required>
+                <option *ngFor="let stack of stacks" [value]="stack.id">{{ stack.name }}</option>
+              </select>
             </div>
-            <div class="mb-3">
-              <label for="partnerDescription" class="form-label">Описание компании</label>
-              <textarea class="form-control" id="partnerDescription" [(ngModel)]="editPartnerDescription" name="partnerDescription"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="nextMeetingDate" class="form-label">Дата ближайшей встречи</label>
-              <input type="datetime-local" class="form-control" id="nextMeetingDate" [(ngModel)]="editNextMeetingDate" name="nextMeetingDate">
-            </div>
-            <div class="mb-3">
-              <label for="companyContactEmail" class="form-label">Email контактного лица в компании</label>
-              <input type="email" class="form-control" id="companyContactEmail" [(ngModel)]="editCompanyContactEmail" name="companyContactEmail">
-            </div>
-            <div class="mb-3">
-              <label for="companyContactTelegram" class="form-label">Telegram контактного лица в компании</label>
-              <input type="text" class="form-control" id="companyContactTelegram" [(ngModel)]="editCompanyContactTelegram" name="companyContactTelegram">
-            </div>
-            <div class="mb-3">
-              <label for="facultyContactFirstName" class="form-label">Имя контактного лица на факультете</label>
-              <input type="text" class="form-control" id="facultyContactFirstName" [(ngModel)]="editFacultyContactFirstName" name="facultyContactFirstName">
-            </div>
-            <div class="mb-3">
-              <label for="facultyContactLastName" class="form-label">Фамилия контактного лица на факультете</label>
-              <input type="text" class="form-control" id="facultyContactLastName" [(ngModel)]="editFacultyContactLastName" name="facultyContactLastName">
-            </div>
-            <div class="mb-3">
-              <label for="studentOffers" class="form-label">Офферы студентам (через запятую)</label>
-              <input type="text" class="form-control" id="studentOffers" [(ngModel)]="editStudentOffers" name="studentOffers">
-            </div>
-            <div class="mb-3">
-              <label for="jobPositions" class="form-label">Позиции и количество (например, Android-разработчик:10, Frontend:5)</label>
-              <input type="text" class="form-control" id="jobPositions" [(ngModel)]="editJobPositions" name="jobPositions">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          <button type="button" class="btn btn-primary" (click)="saveChanges()">Сохранить изменения</button>
-        </div>
+            <button type="button" class="btn btn-outline-secondary" (click)="openAddStackModal()">Новый</button>
+          </div>
+          <div class="mb-3">
+            <label for="positionNum" class="form-label">Количество мест</label>
+            <input type="number" id="positionNum" class="form-control" [(ngModel)]="newPosition.positionNum" name="positionNum" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для добавления нового стека -->
+<div class="modal fade" id="addStackModal" tabindex="-1" aria-labelledby="addStackModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStackModalLabel">Добавить новый стек</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addStack()">
+          <div class="mb-3">
+            <label for="stackName" class="form-label">Название стека</label>
+            <input type="text" id="stackName" class="form-control" [(ngModel)]="newStack.name" name="stackName" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для редактирования позиции -->
+<div class="modal fade" id="editPositionModal" tabindex="-1" aria-labelledby="editPositionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editPositionModalLabel">Редактировать позицию</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="savePosition()">
+          <div class="mb-3">
+            <label for="editStackSelect" class="form-label">Выберите стек</label>
+            <select id="editStackSelect" class="form-select" [(ngModel)]="editPosition.stackId" name="editStackId" required>
+              <option *ngFor="let stack of stacks" [value]="stack.id">{{ stack.name }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="editPositionNum" class="form-label">Количество мест</label>
+            <input type="number" id="editPositionNum" class="form-control" [(ngModel)]="editPosition.positionNum" name="editPositionNum" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="deletePosition()">Удалить</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для редактирования информации о компании -->
+<div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCompanyModalLabel">Редактировать информацию о компании</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="updateCompany()">
+          <div class="mb-3">
+            <label for="companyName" class="form-label">Название компании</label>
+            <input type="text" id="companyName" class="form-control" [(ngModel)]="editCompany.name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="companyContact" class="form-label">Контактное лицо компании</label>
+            <input type="text" id="companyContact" class="form-control" [(ngModel)]="editCompany.companyContact" name="companyContact" required>
+          </div>
+          <div class="mb-3">
+            <label for="hitsContact" class="form-label">Контактное лицо HITs</label>
+            <input type="text" id="hitsContact" class="form-control" [(ngModel)]="editCompany.hitsContact" name="hitsContact" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
