@@ -1,51 +1,100 @@
 <div class="container mt-4">
-  <button class="btn btn-primary mb-3" (click)="openAddModal()">Добавить объявление</button>
-
-  <div *ngIf="isLoading" class="d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Загрузка...</span>
-    </div>
+  <h2 class="mb-4">Объявления</h2>
+  <div class="text-center mb-4">
+    <button class="btn btn-primary" (click)="openCreateAnnouncementModal()">Добавить</button>
   </div>
 
-  <div class="list-group" *ngIf="!isLoading">
-    <div *ngFor="let announcement of announcements" class="list-group-item mb-3">
-      <p class="announcement-text">{{announcement.text}}</p>
-      <p class="announcement-author">{{announcement.name}} {{announcement.surname}} -
-        {{announcement.updatedAt != announcement.createdAt ? formatDate(announcement.updatedAt, true) : formatDate(announcement.createdAt)}}</p>
-      <p>Комментариев: {{announcement.comments.length}}</p>
-      <button class="btn btn-secondary btn-sm" (click)="openEditModal(announcement)">Редактировать</button>
-      <button class="btn btn-danger btn-sm" (click)="deleteAnnouncement(announcement.id)">Удалить</button>
-      <div *ngFor="let comment of announcement.comments" class="comment mt-2">
-        <div *ngIf="comment.id">
-          <small>{{comment.name}} {{comment.surname}}: {{comment.text}} -
-            {{comment.updatedAt != comment.createdAt ? formatDate(comment.updatedAt, true) : formatDate(comment.createdAt)}}</small>
-          <!-- Add buttons for editing and deleting comments if necessary -->
-        </div>
+  <div *ngFor="let announcement of announcements" class="card mb-3">
+    <div class="card-header d-flex justify-content-between">
+      <div>
+        <small>{{announcement.name}} {{announcement.surname}} - {{announcement.updatedAt != announcement.createdAt ? formatDate(announcement.updatedAt, true) : formatDate(announcement.createdAt)}}
+        </small>
       </div>
-      <form (ngSubmit)="addComment(announcement.id, commentText.value)" class="mt-2">
-        <input type="text" #commentText class="form-control" placeholder="Добавить комментарий">
-        <button type="submit" class="btn btn-primary btn-sm mt-1">Отправить</button>
-      </form>
+      <div>
+        <button class="btn btn-outline-secondary btn-sm" (click)="openEditAnnouncementModal(announcement)"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-outline-danger btn-sm ms-2" (click)="confirmDeleteAnnouncement(announcement.id)"><i class="bi bi-trash"></i></button>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{announcement.text}}</p>
+      <hr>
+      <div *ngFor="let comment of announcement.comments" class="mb-2">
+        <div>
+          <small>{{comment.name}} {{comment.surname}} - {{comment.updatedAt != comment.createdAt ? formatDate(comment.updatedAt, true) : formatDate(comment.createdAt)}}
+          </small>
+          <span *ngIf="comment.authorId === currentUserId" class="float-end">
+            <button class="btn btn-outline-secondary btn-sm" (click)="openEditCommentModal(comment)"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-danger btn-sm ms-2" (click)="deleteComment(comment.id)"><i class="bi bi-trash"></i></button>
+          </span>
+        </div>
+        <p>{{comment.text}}</p>
+      </div>
+      <div class="input-group mt-3">
+        <input type="text" class="form-control" [(ngModel)]="newCommentText[announcement.id]" placeholder="Напишите комментарий...">
+        <button class="btn btn-primary" (click)="addComment(announcement.id)">Отправить</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Announcement Modal -->
-<div #announcementModal class="modal fade" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+<!-- Modal для создания/изменения объявления -->
+<div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="announcementModalLabel">{{isEditing ? 'Редактировать' : 'Добавить'}} объявление</h5>
+        <h5 class="modal-title" id="announcementModalLabel">{{ isEditingAnnouncement ? 'Изменить объявление' : 'Создать объявление' }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="saveAnnouncement()">
-          <div class="mb-3">
-            <label for="text" class="form-label">Текст</label>
-            <textarea id="text" class="form-control" [(ngModel)]="announcementText" name="text" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Отправить</button>
-        </form>
+        <div class="form-group">
+          <label for="announcementText">Текст объявления</label>
+          <textarea class="form-control" id="announcementText" [(ngModel)]="currentAnnouncementText"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveAnnouncement()">{{ isEditingAnnouncement ? 'Сохранить' : 'Создать' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal для подтверждения удаления объявления -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteConfirmationModalLabel">Подтверждение удаления</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Вы уверены, что хотите удалить объявление?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-danger" (click)="deleteAnnouncement()">Удалить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal для создания/изменения комментария -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">{{ isEditingComment ? 'Изменить комментарий' : 'Создать комментарий' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="commentText">Текст комментария</label>
+          <textarea class="form-control" id="commentText" [(ngModel)]="currentCommentText"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveComment()">{{ isEditingComment ? 'Сохранить' : 'Создать' }}</button>
       </div>
     </div>
   </div>

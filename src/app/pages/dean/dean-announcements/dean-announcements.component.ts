@@ -1,5 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {AnnouncementService} from "../../../services/announcement.service";
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {jwtDecode} from "jwt-decode";
+import {Jwt} from "../../../models/jwt";
 
 declare var bootstrap: any;
 
@@ -10,70 +13,120 @@ declare var bootstrap: any;
 })
 export class DeanAnnouncementsComponent implements OnInit {
   announcements: any[] = [];
-  streamName: string = '9721';
-  isLoading: boolean = false;
+  newCommentText: { [key: number]: string } = {};
+  currentAnnouncementText: string = '';
+  currentCommentText: string = '';
+  currentUserId: number = 1;
+  isEditingAnnouncement: boolean = false;
+  isEditingComment: boolean = false;
+  currentAnnouncementId: number | null = null;
+  currentCommentId: number | null = null;
+  streamName: string = localStorage.getItem(SELECTED_STREAM_KEY) || '';
 
-  @ViewChild('announcementModal') announcementModal!: ElementRef;
-  modalInstance!: any;
-  isEditing: boolean = false;
-  currentAnnouncement: any = null;
-  announcementText: string = '';
-
-  constructor(private announcementService: AnnouncementService) {
+  constructor(private http: HttpClient) {
   }
 
   ngOnInit(): void {
     this.loadAnnouncements();
+    let token = localStorage.getItem(ACCESS_TOKEN_KEY)
+    if (token != null) {
+      let id = jwtDecode<Jwt>(token).sub
+      this.currentUserId = Number(id)
+    }
   }
 
-  loadAnnouncements(): void {
-    this.isLoading = true;
-    this.announcementService.getAnnouncements(this.streamName).subscribe((data: any[]) => {
+  loadAnnouncements() {
+    this.http.get(`${SERVER_URL}/announcements/get/${this.streamName}`).subscribe((data: any) => {
       this.announcements = data.reverse();
-      this.isLoading = false;
-    }, () => {
-      this.isLoading = false;
-      // handle error
     });
   }
 
-  openAddModal(): void {
-    this.isEditing = false;
-    this.announcementText = '';
-    this.modalInstance = new bootstrap.Modal(this.announcementModal.nativeElement);
-    this.modalInstance.show();
+  openCreateAnnouncementModal() {
+    this.isEditingAnnouncement = false;
+    this.currentAnnouncementText = '';
+    const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
+    myModal.show();
   }
 
-  openEditModal(announcement: any): void {
-    this.isEditing = true;
-    this.currentAnnouncement = announcement;
-    this.announcementText = announcement.text;
-    this.modalInstance = new bootstrap.Modal(this.announcementModal.nativeElement);
-    this.modalInstance.show();
+  openEditAnnouncementModal(announcement: any) {
+    this.isEditingAnnouncement = true;
+    this.currentAnnouncementId = announcement.id;
+    this.currentAnnouncementText = announcement.text;
+    const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
+    myModal.show();
   }
 
-  saveAnnouncement(): void {
-    if (this.isEditing) {
-      this.announcementService.updateAnnouncement(this.currentAnnouncement.id, this.announcementText).subscribe(() => {
+  saveAnnouncement() {
+    if (this.isEditingAnnouncement) {
+      this.http.patch(`${SERVER_URL}/announcements/update`, {
+        id: this.currentAnnouncementId,
+        text: this.currentAnnouncementText
+      }).subscribe(() => {
+        this.closeModal('announcementModal')
         this.loadAnnouncements();
-        this.modalInstance.hide();
       });
     } else {
-      this.announcementService.createAnnouncement(this.streamName, this.announcementText).subscribe(() => {
+      this.http.post(`${SERVER_URL}/announcements/create/${this.streamName}`, {
+        text: this.currentAnnouncementText
+      }).subscribe(() => {
+        this.closeModal('announcementModal')
         this.loadAnnouncements();
-        this.modalInstance.hide();
       });
     }
   }
 
-  deleteAnnouncement(id: number): void {
-    this.announcementService.deleteAnnouncement(id).subscribe(() => {
+  confirmDeleteAnnouncement(id: number) {
+    this.currentAnnouncementId = id;
+    const myModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+    myModal.show();
+  }
+
+  deleteAnnouncement() {
+    this.http.delete(`${SERVER_URL}/announcements/delete`, {
+      body: {id: this.currentAnnouncementId}
+    }).subscribe(() => {
       this.loadAnnouncements();
+      this.closeModal('deleteConfirmationModal')
     });
   }
 
-  addComment(announcementId: number, text: string): void {
-    this.announcementService.createComment(announcementId, text).subscribe(() => {
+  addComment(announcementId: number) {
+    this.http.post(`${SERVER_URL}/announcements/comments/create`, {
+      id: announcementId,
+      text: this.newCommentText[announcementId]
+    }).subscribe(() => {
+      this.loadAnnouncements();
+      this.newCommentText[announcementId] = '';
+    });
+  }
+
+  openEditCommentModal(comment: any) {
+    this.isEditingComment = true;
+    this.currentCommentId = comment.id;
+    this.currentCommentText = comment.text;
+    const myModal = new bootstrap.Modal(document.getElementById('commentModal'));
+    myModal.show();
+  }
+
+  saveComment() {
+    if (this.isEditingComment) {
+      this.http.patch(`${SERVER_URL}/announcements/comments/update`, {
+        id: this.currentCommentId,
+        text: this.currentCommentText
+      }).subscribe(() => {
+        this.loadAnnouncements();
+        const myModal = new bootstrap.Modal(document.getElementById('commentModal'));
+        myModal.hide();
+      });
+    } else {
+      this.closeModal('commentModal')
+    }
+  }
+
+  deleteComment(id: number) {
+    this.http.delete(`${SERVER_URL}/announcements/comments/delete`, {
+      body: {id}
+    }).subscribe(() => {
       this.loadAnnouncements();
     });
   }
@@ -96,5 +149,10 @@ export class DeanAnnouncementsComponent implements OnInit {
     const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
 
     return updated ? `${formattedDate} (изменено)` : formattedDate;
+  }
+
+  closeModal(modalId: string) {
+    const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+    modal.hide();
   }
 }
