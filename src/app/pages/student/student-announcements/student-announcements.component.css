@@ -1,0 +1,9 @@
+.card {
+  margin-bottom: 1rem;
+}
+.card-body {
+  position: relative;
+}
+.input-group {
+  margin-top: 1rem;
+}

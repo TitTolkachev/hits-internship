@@ -1,1 +1,53 @@
-<p>student-announcements works!</p>
+<div class="container mt-4">
+  <h2 class="mb-4">Объявления</h2>
+
+  <div *ngFor="let announcement of announcements" class="card mb-3">
+    <div class="card-header d-flex justify-content-between">
+      <div>
+        <small>{{announcement.name}} {{announcement.surname}} - {{announcement.updatedAt != announcement.createdAt ? formatDate(announcement.updatedAt, true) : formatDate(announcement.createdAt)}}
+        </small>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{announcement.text}}</p>
+      <hr>
+      <div *ngFor="let comment of announcement.comments" class="mb-2">
+        <div>
+          <small>{{comment.name}} {{comment.surname}} - {{comment.updatedAt != comment.createdAt ? formatDate(comment.updatedAt, true) : formatDate(comment.createdAt)}}
+          </small>
+          <span *ngIf="comment.userId === currentUserId" class="float-end">
+            <button class="btn btn-outline-secondary btn-sm" (click)="openEditCommentModal(comment)"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-danger btn-sm ms-2" (click)="deleteComment(comment.id)"><i class="bi bi-trash"></i></button>
+          </span>
+        </div>
+        <p>{{comment.text}}</p>
+      </div>
+      <div class="input-group mt-3">
+        <input type="text" class="form-control" [(ngModel)]="newCommentText[announcement.id]" placeholder="Напишите комментарий...">
+        <button class="btn btn-primary" (click)="addComment(announcement.id)">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal для создания/изменения комментария -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">{{ isEditingComment ? 'Изменить комментарий' : 'Создать комментарий' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="commentText">Текст комментария</label>
+          <textarea class="form-control" id="commentText" [(ngModel)]="currentCommentText"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveComment()">{{ isEditingComment ? 'Сохранить' : 'Создать' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
