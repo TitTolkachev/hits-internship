@@ -20,6 +20,7 @@ import {InviteComponent} from "./pages/invite/invite.component";
 import {AdminStudentsComponent} from "./pages/admin/admin-students/admin-students.component";
 import {AdminAnnouncementsComponent} from "./pages/admin/admin-announcements/admin-announcements.component";
 import {DeanStudentComponent} from "./pages/dean/dean-student/dean-student.component";
+import {StudentTaskComponent} from "./pages/student/student-task/student-task.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -41,6 +42,7 @@ const routes: Routes = [
       {path: 'calendar', component: StudentCalendarComponent},
       {path: 'partners', component: StudentPartnersComponent},
       {path: 'tasks', component: StudentTasksComponent},
+      {path: 'task/:id', component: StudentTaskComponent},
       {path: 'profile', component: ProfileComponent},
     ]
   },

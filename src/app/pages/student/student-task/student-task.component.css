@@ -1,0 +1,15 @@
+.card {
+  margin-bottom: 1rem;
+}
+
+.card-header small {
+  font-size: 0.8rem;
+}
+
+.card-body .card {
+  margin-top: 1rem;
+}
+
+.modal .form-label {
+  font-weight: bold;
+}

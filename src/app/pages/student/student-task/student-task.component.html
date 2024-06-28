@@ -1,0 +1,61 @@
+<div *ngIf="isLoading" class="text-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="!isLoading">
+  <div *ngIf="answer && answer.sentDate !== 0" class="card mb-3">
+    <div class="card-header d-flex justify-content-between">
+      <small>{{ answer.sentDate | date:'short' }}</small>
+      <button class="btn btn-outline-secondary btn-sm" (click)="openModal()">
+        <i class="bi bi-pencil"></i> Edit
+      </button>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ answer.completionStatus }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ answer.mark }}</h6>
+      <p class="card-text">{{ answer.text }}</p>
+      <div class="card mt-2" *ngFor="let file of answer.files">
+        <div class="card-body">
+          <a [href]="file" target="_blank">{{ file }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="answer && answer.sentDate === 0" class="card mb-3">
+    <div class="card-body">
+      <p class="card-text">Ответа нет.</p>
+      <button class="btn btn-primary" (click)="openModal()">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="answerModalLabel">Ответ на задание</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #answerForm="ngForm">
+          <div class="mb-3">
+            <label for="text" class="form-label">Текст ответа</label>
+            <textarea class="form-control" id="text" [(ngModel)]="answer.text" name="text" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="files" class="form-label">Файлы</label>
+            <input class="form-control" id="files" [(ngModel)]="answer.files" name="files" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveAnswer(answer.text, answer.files)">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>

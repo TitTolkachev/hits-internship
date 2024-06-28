@@ -1,1 +1,41 @@
-<p>student-tasks works!</p>
+<div class="container mt-4">
+  <h2 class="mb-4">Список заданий</h2>
+
+  <div *ngFor="let task of tasks" class="card mb-3">
+    <div class="card-header d-flex justify-content-between">
+      <div style="display: flex; align-items: center">
+        <button class="btn btn-primary btn-sm me-3" (click)="openTask(task.id)">Открыть</button>
+        <small>{{task.editionDate != 0 ? formatDate(task.editionDate, true) : formatDate(task.creationDate)}}</small>
+        <small class="ms-2 styled-small me-auto" *ngIf="task.deadlineDate != 0">{{formatDate(task.deadlineDate)}}</small>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <p class="card-text" style="white-space: pre-line">{{task.text}}</p>
+
+      <!-- Файлы -->
+      <div class="file-list mt-2">
+        <div *ngFor="let url of task.attachments; let i = index" class="card2">
+          <div class="card2-body">
+            <h5 class="card-title" (click)="openFileByUrl(url)">{{ i+1 }} файл</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Комменты -->
+      <hr>
+      <div *ngFor="let comment of task.comments" class="mb-2">
+        <div>
+          <small>{{comment.name}} {{comment.surname}} - {{formatDate(comment.creationDate)}}
+          </small>
+        </div>
+        <p style="white-space: pre-line">{{comment.text}}</p>
+      </div>
+      <div class="input-group mt-3">
+        <input type="text" class="form-control" [(ngModel)]="newCommentText[task.id]"
+               placeholder="Напишите комментарий...">
+        <button class="btn btn-primary" (click)="addComment(task.id)">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
