@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {StudentService} from "../../../services/student.service";
+import {SELECTED_STREAM_KEY} from "../../../constants";
 
 @Component({
   selector: 'app-dean-users',
@@ -17,7 +18,7 @@ export class DeanUsersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.studentService.getStudents().subscribe(data => {
+    this.studentService.getStudents(localStorage.getItem(SELECTED_STREAM_KEY) || '').subscribe(data => {
         this.students = data.students;
         this.assignments = Array.from({length: data.taskNum}, (_, i) => i + 1);
       }

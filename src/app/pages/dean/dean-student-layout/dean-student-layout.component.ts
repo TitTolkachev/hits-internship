@@ -9,13 +9,14 @@ import {HttpClient} from "@angular/common/http";
 })
 export class DeanStudentLayoutComponent implements OnInit {
 
-  ids: Object = []
+  ids: any[] = []
 
   constructor(private http: HttpClient) {
   }
 
   ngOnInit(): void {
     let streamName = localStorage.getItem(SELECTED_STREAM_KEY)
-    this.http.get(`/${streamName}`).subscribe((ids) => this.ids = ids)
+    this.ids = [1,2,3]
+    // this.http.get<any[]>(`/${streamName}`).subscribe((ids) => this.ids = ids)
   }
 }

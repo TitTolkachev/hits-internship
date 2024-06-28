@@ -222,8 +222,8 @@ export class StudentService {
     return [1, 2, 3];
   }
 
-  getStudents(): Observable<MarkListDto> {
+  getStudents(streamName: string): Observable<MarkListDto> {
     // return this.students
-    return this.http.get<MarkListDto>(`${SERVER_URL}/task/get/students`)
+    return this.http.get<MarkListDto>(`${SERVER_URL}/task/get/students/${streamName}`)
   }
 }
