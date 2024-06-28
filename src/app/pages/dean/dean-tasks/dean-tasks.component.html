@@ -6,9 +6,10 @@
 
   <div *ngFor="let task of tasks" class="card mb-3">
     <div class="card-header d-flex justify-content-between">
-      <div>
+      <div style="display: flex; align-items: center">
         <button class="btn btn-primary btn-sm me-3" (click)="openTask(task.id)">Открыть</button>
         <small>{{task.editionDate != 0 ? formatDate(task.editionDate, true) : formatDate(task.creationDate)}}</small>
+        <small class="ms-2 styled-small me-auto" *ngIf="task.deadlineDate != 0">{{formatDate(task.deadlineDate)}}</small>
       </div>
       <div>
         <button class="btn btn-outline-secondary btn-sm" (click)="openEditAnnouncementModal(task)"><i
@@ -80,6 +81,15 @@
 
         <div class="form-group mt-3">
           <input type="file" class="form-control-file" id="fileInput" (change)="onFileSelected($event)" multiple>
+        </div>
+
+        <div *ngIf="uploadedFiles.length > 0" class="file-list mt-2">
+          <div *ngFor="let file of uploadedFiles; let i = index" class="card2">
+            <div class="card2-body">
+              <button class="close-btn" (click)="removeUploadedFile(i)">&times;</button>
+              <h5 class="card-title" (click)="openFile(file)">{{ i + 1 }} файл</h5>
+            </div>
+          </div>
         </div>
 
         <div *ngIf="uploadingFiles.length > 0" class="file-list mt-2">

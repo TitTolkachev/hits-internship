@@ -70,14 +70,17 @@ export class DeanTasksComponent implements OnInit {
     this.currentTaskText = announcement.text;
     this.selectedDate = announcement.deadlineDate;
     this.selectedTime = announcement.deadlineDate;
-    this.uploadedFiles = announcement.attachments;
+    this.uploadedFiles = announcement.attachments.slice();
     const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
     myModal.show();
   }
 
   saveAnnouncement() {
-    const dateTime = new Date(`${this.selectedDate}T${this.selectedTime}:00`);
-    const epochTime = Math.floor(dateTime.getTime() / 1000);
+    let epochTime = 0;
+    if (this.selectedDate != '' && this.selectedTime != ''){
+      const dateTime = new Date(`${this.selectedDate}T${this.selectedTime}:00`);
+      epochTime = Math.floor(dateTime.getTime() / 1000);
+    }
 
     const attachments = this.uploadingFiles
       .map(file => file.url)
@@ -196,5 +199,9 @@ export class DeanTasksComponent implements OnInit {
 
   removeFile(index: number): void {
     this.uploadingFiles.splice(index, 1);
+  }
+
+  removeUploadedFile(index: number): void {
+    this.uploadedFiles.splice(index, 1);
   }
 }

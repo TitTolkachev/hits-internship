@@ -10,6 +10,12 @@
 
 
 
+.styled-small {
+  color: white;
+  background-color: #e53333; /* Нежно-красный фон */
+  border-radius: 5px; /* Скругленные углы */
+  padding: 2px 5px; /* Внутренние отступы */
+}
 
 .file-list {
   display: flex;
