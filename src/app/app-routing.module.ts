@@ -31,6 +31,8 @@ const routes: Routes = [
       {path: 'announcements', component: DeanAnnouncementsComponent},
       {path: 'tasks', component: DeanTasksComponent},
       {path: 'users', component: DeanUsersComponent},
+      {path: 'partners', component: PartnersComponent},
+      {path: 'partners/:id', component: PartnerDetailComponent},
       {path: 'profile', component: ProfileComponent},
       {path: 'task/:id', component: DeanTasksComponent},
       {path: 'student/:id', component: DeanStudentComponent},

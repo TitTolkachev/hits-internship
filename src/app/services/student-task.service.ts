@@ -17,7 +17,7 @@ export class StudentTaskService {
     return this.http.post<any>(`${this.apiUrl}/answers/get`, {taskId, userId});
   }
 
-  createAnswer(taskId: number, text: string, files: string[]): Observable<any> {
+  createAnswer(taskId: number, text: string, files: any[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/answers/create/${taskId}`, {text, files});
   }
 }

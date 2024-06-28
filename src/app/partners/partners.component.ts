@@ -62,7 +62,7 @@ export class PartnersComponent implements OnInit {
   }
 
   viewPartner(partnerId: number): void {
-    this.router.navigate([`/admin/partners/${partnerId}`]).then();
+    this.router.navigate([`${this.router.url}/${partnerId}`]).then();
   }
 
   formatTime(time: number): string {
