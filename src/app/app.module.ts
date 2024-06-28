@@ -30,7 +30,6 @@ import { InviteComponent } from './pages/invite/invite.component';
 import { AdminStudentsComponent } from './pages/admin/admin-students/admin-students.component';
 import { AdminAnnouncementsComponent } from './pages/admin/admin-announcements/admin-announcements.component';
 import { DeanStudentComponent } from './pages/dean/dean-student/dean-student.component';
-import { DeanTaskComponent } from './pages/dean/dean-task/dean-task.component';
 import { StudentTaskComponent } from './pages/student/student-task/student-task.component';
 
 @NgModule({
@@ -59,7 +58,6 @@ import { StudentTaskComponent } from './pages/student/student-task/student-task.
     AdminStudentsComponent,
     AdminAnnouncementsComponent,
     DeanStudentComponent,
-    DeanTaskComponent,
     StudentTaskComponent
   ],
   bootstrap: [AppComponent],
