@@ -16,18 +16,18 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let student of filteredStudents()" (click)="goToStudent(student.id)" [ngClass]="{'table-active': selectedStudent === student.id}">
-      <th scope="row" class="table-secondary">{{ student.id }}</th>
+    <tr *ngFor="let student of filteredStudents(); let i = index" (click)="goToStudent(student.id)" [ngClass]="{'table-active': selectedStudent === student.id}">
+      <th scope="row" class="table-secondary">{{ i + 1 }}</th>
       <td>{{ student.surname }} {{ student.name }}</td>
       <ng-container *ngFor="let assignment of assignments">
         <td [ngClass]="getGradeClass(student.marks, assignment)">
-          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 'graded'">
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) > 1">
             <i class="bi bi-check"></i> {{ getAssignmentGrade(student.marks, assignment) }}
           </ng-container>
-          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 'submitted'">
-            <i class="bi bi-clock"></i>
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 1">
+            <i class="bi bi-clock"></i> {{ getAssignmentGrade(student.marks, assignment) }}
           </ng-container>
-          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 'not_submitted'">
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 0">
             -
           </ng-container>
         </td>

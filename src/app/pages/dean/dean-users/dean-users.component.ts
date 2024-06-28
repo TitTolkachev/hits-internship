@@ -30,13 +30,13 @@ export class DeanUsersComponent implements OnInit {
       return this.students;
     }
     return this.students.filter(student =>
-      `${student.firstName} ${student.lastName}`.toLowerCase().includes(this.searchTerm.toLowerCase())
+      `${student.surname} ${student.name}`.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 
   getAssignmentStatus(assignments: any[], assignmentNumber: number) {
     const assignment = assignments[assignmentNumber - 1];
-    return assignment ? assignment.completionStatus : 'not_submitted';
+    return assignment ? assignment.completionStatus : 0;
   }
 
   getAssignmentGrade(assignments: any[], assignmentNumber: number) {

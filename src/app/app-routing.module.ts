@@ -37,7 +37,7 @@ const routes: Routes = [
       {path: 'profile', component: ProfileComponent},
       {path: 'task/:id', component: DeanTasksComponent},
       {
-        path: 'student', component: DeanStudentLayoutComponent, children: [
+        path: 'student/:id', component: DeanStudentLayoutComponent, children: [
           {path: ':id', component: DeanStudentComponent},
         ]
       },
