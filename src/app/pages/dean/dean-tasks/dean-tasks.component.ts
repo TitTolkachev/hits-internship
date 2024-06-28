@@ -4,7 +4,6 @@ import {S3Service} from "../../../services/s3.service";
 import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
 import {jwtDecode} from "jwt-decode";
 import {Jwt} from "../../../models/jwt";
-import {Router} from "@angular/router";
 
 declare var bootstrap: any;
 
@@ -35,7 +34,7 @@ export class DeanTasksComponent implements OnInit {
   selectedDate: string = '';
   selectedTime: string = '';
 
-  constructor(private http: HttpClient, private s3Service: S3Service, private router: Router) {
+  constructor(private http: HttpClient, private s3Service: S3Service) {
   }
 
   ngOnInit(): void {
@@ -77,7 +76,7 @@ export class DeanTasksComponent implements OnInit {
 
   saveAnnouncement() {
     let epochTime = 0;
-    if (this.selectedDate != '' && this.selectedTime != ''){
+    if (this.selectedDate != '' && this.selectedTime != '') {
       const dateTime = new Date(`${this.selectedDate}T${this.selectedTime}:00`);
       epochTime = Math.floor(dateTime.getTime() / 1000);
     }
@@ -90,7 +89,7 @@ export class DeanTasksComponent implements OnInit {
     if (this.isEditingAnnouncement) {
       this.http.patch(`${SERVER_URL}/task/update/${this.currentAnnouncementId}`, {
         text: this.currentTaskText,
-        deadlineDate : epochTime,
+        deadlineDate: epochTime,
         attachments: attachments,
       }).subscribe(() => {
         this.closeModal('announcementModal')
@@ -99,7 +98,7 @@ export class DeanTasksComponent implements OnInit {
     } else {
       this.http.post(`${SERVER_URL}/task/create/${this.streamName}`, {
         text: this.currentTaskText,
-        deadlineDate : epochTime,
+        deadlineDate: epochTime,
         attachments: attachments,
       }).subscribe(() => {
         this.closeModal('announcementModal')
@@ -153,10 +152,6 @@ export class DeanTasksComponent implements OnInit {
   closeModal(modalId: string) {
     const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
     modal.hide();
-  }
-
-  openTask(taskId: string) {
-    this.router.navigateByUrl(`/dean/task/${taskId}`).then()
   }
 
   onFileSelected(event: any) {

@@ -7,7 +7,6 @@
   <div *ngFor="let task of tasks" class="card mb-3">
     <div class="card-header d-flex justify-content-between">
       <div style="display: flex; align-items: center">
-        <button class="btn btn-primary btn-sm me-3" (click)="openTask(task.id)">Открыть</button>
         <small>{{task.editionDate != 0 ? formatDate(task.editionDate, true) : formatDate(task.creationDate)}}</small>
         <small class="ms-2 styled-small me-auto" *ngIf="task.deadlineDate != 0">{{formatDate(task.deadlineDate)}}</small>
       </div>
