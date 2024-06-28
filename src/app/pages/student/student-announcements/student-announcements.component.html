@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="card-body">
-      <p class="card-text">{{announcement.text}}</p>
+      <p class="card-text" style="white-space: pre-line">{{announcement.text}}</p>
       <hr>
       <div *ngFor="let comment of announcement.comments" class="mb-2">
         <div>
@@ -20,7 +20,7 @@
             <button class="btn btn-outline-danger btn-sm ms-2" (click)="deleteComment(comment.id)"><i class="bi bi-trash"></i></button>
           </span>
         </div>
-        <p>{{comment.text}}</p>
+        <p style="white-space: pre-line">{{comment.text}}</p>
       </div>
       <div class="input-group mt-3">
         <input type="text" class="form-control" [(ngModel)]="newCommentText[announcement.id]" placeholder="Напишите комментарий...">
@@ -41,7 +41,7 @@
       <div class="modal-body">
         <div class="form-group">
           <label for="commentText">Текст комментария</label>
-          <textarea class="form-control" id="commentText" [(ngModel)]="currentCommentText"></textarea>
+          <textarea class="form-control" style="white-space: pre-line" id="commentText" [(ngModel)]="currentCommentText"></textarea>
         </div>
       </div>
       <div class="modal-footer">

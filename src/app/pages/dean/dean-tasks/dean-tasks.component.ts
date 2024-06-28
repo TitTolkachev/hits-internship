@@ -21,6 +21,7 @@ interface UploadingFile {
 })
 export class DeanTasksComponent implements OnInit {
   uploadingFiles: UploadingFile[] = [];
+  uploadedFiles: [] = [];
   isUploading = false;
 
   tasks: any[] = [];
@@ -58,6 +59,7 @@ export class DeanTasksComponent implements OnInit {
     this.selectedDate = '';
     this.selectedTime = '';
     this.uploadingFiles = []
+    this.uploadedFiles = [];
     const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
     myModal.show();
   }
@@ -66,6 +68,9 @@ export class DeanTasksComponent implements OnInit {
     this.isEditingAnnouncement = true;
     this.currentAnnouncementId = announcement.id;
     this.currentTaskText = announcement.text;
+    this.selectedDate = announcement.deadlineDate;
+    this.selectedTime = announcement.deadlineDate;
+    this.uploadedFiles = announcement.attachments;
     const myModal = new bootstrap.Modal(document.getElementById('announcementModal'));
     myModal.show();
   }
@@ -74,8 +79,13 @@ export class DeanTasksComponent implements OnInit {
     const dateTime = new Date(`${this.selectedDate}T${this.selectedTime}:00`);
     const epochTime = Math.floor(dateTime.getTime() / 1000);
 
+    const attachments = this.uploadingFiles
+      .map(file => file.url)
+      .filter(url => url !== null)
+      .concat(this.uploadedFiles)
+
     if (this.isEditingAnnouncement) {
-      this.http.patch(`${SERVER_URL}/announcements/update`, {
+      this.http.patch(`${SERVER_URL}/task/update`, {
         id: this.currentAnnouncementId,
         text: this.currentTaskText
       }).subscribe(() => {
@@ -86,7 +96,7 @@ export class DeanTasksComponent implements OnInit {
       this.http.post(`${SERVER_URL}/task/create/${this.streamName}`, {
         text: this.currentTaskText,
         deadlineDate : epochTime,
-        attachments: this.uploadingFiles.map((file)=>{return file.url}),
+        attachments: attachments,
       }).subscribe(() => {
         this.closeModal('announcementModal')
         this.loadAnnouncements();

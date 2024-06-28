@@ -35,15 +35,15 @@ export class LoginComponent {
         localStorage.setItem(ROLE_KEY, role)
 
         if (role == 'Admin') {
-          this.router.navigateByUrl("/admin").then()
+          this.router.navigateByUrl("/admin/announcements").then()
           return;
         }
         if (role == 'Dean') {
-          this.router.navigateByUrl("/dean").then()
+          this.router.navigateByUrl("/dean/announcements").then()
           return;
         }
         if (role == 'Student') {
-          this.router.navigateByUrl("/student").then()
+          this.router.navigateByUrl("/student/announcements").then()
           return;
         }
 
