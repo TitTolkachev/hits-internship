@@ -1,0 +1,27 @@
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+thead th {
+  background-color: #f8f9fa;
+}
+
+.table-secondary {
+  background-color: #e2e3e5;
+}
+
+.table-danger {
+  background-color: #f8d7da;
+}
+
+.table-warning {
+  background-color: #fff3cd;
+}
+
+.table-info {
+  background-color: #d1ecf1;
+}
+
+.table-success {
+  background-color: #d4edda;
+}

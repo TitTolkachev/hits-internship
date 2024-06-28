@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {ACCESS_TOKEN_KEY, SERVER_URL} from "../../../constants";
 import {jwtDecode} from "jwt-decode";
 import {Jwt} from "../../../models/jwt";
+import {UserService} from "../../../services/user.service";
 
 declare var bootstrap: any;
 
@@ -18,18 +19,27 @@ export class StudentAnnouncementsComponent implements OnInit {
   currentUserId: number = 1;
   isEditingComment: boolean = false;
   currentCommentId: number | null = null;
-  streamName: string = localStorage.getItem(SELECTED_STREAM_KEY) || '';
+  streamName: string = '';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
+    userService.getCurrentUser().subscribe(user => {
+        this.streamName = user.streamName;
+        this.loadAnnouncements();
+      }
+    )
   }
 
   ngOnInit(): void {
-    this.loadAnnouncements();
-    let token = localStorage.getItem(ACCESS_TOKEN_KEY)
-    if (token != null) {
-      let id = jwtDecode<Jwt>(token).sub
-      this.currentUserId = Number(id)
-    }
+    this.userService.getCurrentUser().subscribe(user => {
+        this.streamName = user.streamName;
+        this.loadAnnouncements();
+        let token = localStorage.getItem(ACCESS_TOKEN_KEY)
+        if (token != null) {
+          let id = jwtDecode<Jwt>(token).sub
+          this.currentUserId = Number(id)
+        }
+      }
+    )
   }
 
   loadAnnouncements() {

@@ -16,10 +16,10 @@ import {ProfileComponent} from "./pages/profile/profile.component";
 import {DeanUsersComponent} from "./pages/dean/dean-users/dean-users.component";
 import {DeanTasksComponent} from "./pages/dean/dean-tasks/dean-tasks.component";
 import {DeanAnnouncementsComponent} from "./pages/dean/dean-announcements/dean-announcements.component";
-import {DeanMarksComponent} from "./pages/dean/dean-marks/dean-marks.component";
 import {InviteComponent} from "./pages/invite/invite.component";
 import {AdminStudentsComponent} from "./pages/admin/admin-students/admin-students.component";
 import {AdminAnnouncementsComponent} from "./pages/admin/admin-announcements/admin-announcements.component";
+import {DeanStudentComponent} from "./pages/dean/dean-student/dean-student.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -30,9 +30,9 @@ const routes: Routes = [
       {path: 'announcements', component: DeanAnnouncementsComponent},
       {path: 'tasks', component: DeanTasksComponent},
       {path: 'users', component: DeanUsersComponent},
-      {path: 'marks', component: DeanMarksComponent},
       {path: 'profile', component: ProfileComponent},
-      {path: 'task/:id', component: ProfileComponent},
+      {path: 'task/:id', component: DeanTasksComponent},
+      {path: 'student/:id', component: DeanStudentComponent},
     ]
   },
   {

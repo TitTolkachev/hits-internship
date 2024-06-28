@@ -23,13 +23,14 @@ import { StudentCalendarComponent } from './pages/student/student-calendar/stude
 import { StudentTasksComponent } from './pages/student/student-tasks/student-tasks.component';
 import { StudentPartnersComponent } from './pages/student/student-partners/student-partners.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { DeanMarksComponent } from './pages/dean/dean-marks/dean-marks.component';
 import { DeanAnnouncementsComponent } from './pages/dean/dean-announcements/dean-announcements.component';
 import { DeanTasksComponent } from './pages/dean/dean-tasks/dean-tasks.component';
 import { DeanUsersComponent } from './pages/dean/dean-users/dean-users.component';
 import { InviteComponent } from './pages/invite/invite.component';
 import { AdminStudentsComponent } from './pages/admin/admin-students/admin-students.component';
 import { AdminAnnouncementsComponent } from './pages/admin/admin-announcements/admin-announcements.component';
+import { DeanStudentComponent } from './pages/dean/dean-student/dean-student.component';
+import { DeanTaskComponent } from './pages/dean/dean-task/dean-task.component';
 
 @NgModule({
   declarations: [
@@ -50,13 +51,14 @@ import { AdminAnnouncementsComponent } from './pages/admin/admin-announcements/a
     StudentTasksComponent,
     StudentPartnersComponent,
     ProfileComponent,
-    DeanMarksComponent,
     DeanAnnouncementsComponent,
     DeanTasksComponent,
     DeanUsersComponent,
     InviteComponent,
     AdminStudentsComponent,
-    AdminAnnouncementsComponent
+    AdminAnnouncementsComponent,
+    DeanStudentComponent,
+    DeanTaskComponent
   ],
   bootstrap: [AppComponent],
   imports: [

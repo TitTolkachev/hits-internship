@@ -1,1 +1,37 @@
-<p>dean-users works!</p>
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Поиск студента по фамилии и имени" [(ngModel)]="searchTerm">
+    </div>
+  </div>
+  <table class="table table-hover">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Студент</th>
+      <ng-container *ngFor="let assignment of assignments">
+        <th scope="col">Задание {{ assignment }}</th>
+      </ng-container>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let student of filteredStudents()" (click)="goToStudent(student.id)" [ngClass]="{'table-active': selectedStudent === student.id}">
+      <th scope="row" class="table-secondary">{{ student.id }}</th>
+      <td>{{ student.lastName }} {{ student.firstName }}</td>
+      <ng-container *ngFor="let assignment of assignments">
+        <td [ngClass]="getGradeClass(student.assignments, assignment)">
+          <ng-container *ngIf="getAssignmentStatus(student.assignments, assignment) === 'graded'">
+            <i class="bi bi-check"></i> {{ getAssignmentGrade(student.assignments, assignment) }}
+          </ng-container>
+          <ng-container *ngIf="getAssignmentStatus(student.assignments, assignment) === 'submitted'">
+            <i class="bi bi-clock"></i>
+          </ng-container>
+          <ng-container *ngIf="getAssignmentStatus(student.assignments, assignment) === 'not_submitted'">
+            -
+          </ng-container>
+        </td>
+      </ng-container>
+    </tr>
+    </tbody>
+  </table>
+</div>
