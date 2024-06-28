@@ -1,0 +1,81 @@
+/* Стили для панели выбора задания */
+.btn-group {
+  margin-bottom: 20px;
+}
+
+/* Стили для отображения ответа студента */
+.card {
+  margin-bottom: 20px;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.file-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.file-list li {
+  margin-bottom: 5px;
+}
+
+.grade-status {
+  margin-top: 10px;
+}
+
+/* Стили для чата со студентом */
+.chat-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.message small {
+  color: #6c757d;
+}
+
+.message .btn {
+  margin-left: 5px;
+}
+
+/* Стили для модальных окон */
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  justify-content: space-between;
+}
+
+/* Дополнительные стили для кнопок и иконок */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  color: #333;
+}
+
+.fa-pencil-alt, .fa-trash-alt {
+  font-size: 16px;
+}

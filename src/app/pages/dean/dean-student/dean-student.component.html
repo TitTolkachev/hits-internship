@@ -1,1 +1,124 @@
-<p>dean-student works!</p>
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col">
+      <div class="btn-group" role="group" aria-label="Выбор задания">
+        <button type="button" class="btn btn-secondary" *ngFor="let assignment of assignments"
+                (click)="selectAssignment(assignment)">
+          Задание {{ assignment }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedAssignment !== null">
+    <div class="row mb-3">
+      <div class="col">
+        <h5>Ответ студента</h5>
+        <div *ngIf="currentResponse">
+          <p>{{ currentResponse.text }}</p>
+          <ul>
+            <li *ngFor="let file of currentResponse.files">
+              <a [href]="file.url">{{ file.name }}</a>
+            </li>
+          </ul>
+          <p>Оценка: {{ currentResponse.grade }}</p>
+          <p>Статус: {{ currentResponse.status }}</p>
+          <button class="btn btn-primary" (click)="openGradeModal()">Оценить</button>
+        </div>
+        <div *ngIf="!currentResponse">
+          <p>Студент не прислал работу.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <h5>Чат со студентом</h5>
+        <div class="chat-box">
+          <div *ngFor="let message of chatMessages">
+            <div class="message">
+              <strong>{{ message.author }}</strong> <small>{{ message.date }}</small>
+              <p>{{ message.text }}</p>
+              <button *ngIf="message.authorId === currentUserId" class="btn btn-sm btn-outline-secondary" (click)="editMessage(message)">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button *ngIf="message.authorId === currentUserId" class="btn btn-sm btn-outline-danger" (click)="deleteMessage(message)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mt-3">
+          <input type="text" class="form-control" [(ngModel)]="newMessageText" placeholder="Введите сообщение">
+          <div class="input-group-append">
+            <button class="btn btn-primary" (click)="sendMessage()">Отправить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для оценки -->
+  <div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gradeModalLabel">Оценить задание</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="statusSelect">Статус работы</label>
+            <select class="form-control" id="statusSelect" [(ngModel)]="currentResponse.status">
+              <option value="not_submitted">Не прислана</option>
+              <option value="under_review">Требует проверки</option>
+              <option value="needs_revision">Переделать</option>
+              <option value="resubmission_required">Нужно принести</option>
+              <option value="submitted">Принесена</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="gradeSelect">Оценка</label>
+            <select class="form-control" id="gradeSelect" [(ngModel)]="currentResponse.grade">
+              <option value="-">-</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary" (click)="saveGrade()">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для редактирования сообщения -->
+  <div class="modal fade" id="editMessageModal" tabindex="-1" role="dialog" aria-labelledby="editMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editMessageModalLabel">Редактировать сообщение</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="editMessageText">Сообщение</label>
+            <input type="text" class="form-control" id="editMessageText" [(ngModel)]="editingMessage.text">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary" (click)="saveEditedMessage()">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
