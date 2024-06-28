@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {StudentService} from "../../../services/student.service";
 
 @Component({
@@ -10,13 +10,18 @@ import {StudentService} from "../../../services/student.service";
 export class DeanUsersComponent implements OnInit {
   students: any[] = [];
   searchTerm: string = '';
-  assignments: number[] = [1, 2, 3]; // Здесь можно указать количество заданий
+  assignments: number[] = [1, 2, 3];
   selectedStudent: number | null = null;
 
-  constructor(private studentService: StudentService, private router: Router) { }
+  constructor(private studentService: StudentService, private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.students = this.studentService.getStudents();
+    this.studentService.getStudents().subscribe(data => {
+        this.students = data.students;
+        this.assignments = Array.from({length: data.taskNum}, (_, i) => i + 1);
+      }
+    );
   }
 
   filteredStudents() {
@@ -29,13 +34,13 @@ export class DeanUsersComponent implements OnInit {
   }
 
   getAssignmentStatus(assignments: any[], assignmentNumber: number) {
-    const assignment = assignments.find(a => a.number === assignmentNumber);
-    return assignment ? assignment.status : 'not_submitted';
+    const assignment = assignments[assignmentNumber - 1];
+    return assignment ? assignment.completionStatus : 'not_submitted';
   }
 
   getAssignmentGrade(assignments: any[], assignmentNumber: number) {
-    const assignment = assignments.find(a => a.number === assignmentNumber);
-    return assignment && assignment.grade ? assignment.grade : '';
+    const assignment = assignments[assignmentNumber - 1];
+    return assignment && assignment.mark ? assignment.mark : '';
   }
 
   getGradeClass(assignments: any[], assignmentNumber: number) {

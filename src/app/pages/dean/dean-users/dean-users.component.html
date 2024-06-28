@@ -12,25 +12,27 @@
       <ng-container *ngFor="let assignment of assignments">
         <th scope="col">Задание {{ assignment }}</th>
       </ng-container>
+      <th scope="col">Стажировка</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let student of filteredStudents()" (click)="goToStudent(student.id)" [ngClass]="{'table-active': selectedStudent === student.id}">
       <th scope="row" class="table-secondary">{{ student.id }}</th>
-      <td>{{ student.lastName }} {{ student.firstName }}</td>
+      <td>{{ student.surname }} {{ student.name }}</td>
       <ng-container *ngFor="let assignment of assignments">
-        <td [ngClass]="getGradeClass(student.assignments, assignment)">
-          <ng-container *ngIf="getAssignmentStatus(student.assignments, assignment) === 'graded'">
-            <i class="bi bi-check"></i> {{ getAssignmentGrade(student.assignments, assignment) }}
+        <td [ngClass]="getGradeClass(student.marks, assignment)">
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 'graded'">
+            <i class="bi bi-check"></i> {{ getAssignmentGrade(student.marks, assignment) }}
           </ng-container>
-          <ng-container *ngIf="getAssignmentStatus(student.assignments, assignment) === 'submitted'">
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 'submitted'">
             <i class="bi bi-clock"></i>
           </ng-container>
-          <ng-container *ngIf="getAssignmentStatus(student.assignments, assignment) === 'not_submitted'">
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 'not_submitted'">
             -
           </ng-container>
         </td>
       </ng-container>
+      <td>{{ student.companyName }}</td>
     </tr>
     </tbody>
   </table>
