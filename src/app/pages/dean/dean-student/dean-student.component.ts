@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {StudentService} from "../../../services/student.service";
+import {ActivatedRoute} from '@angular/router';
+import {StudentTaskService} from "../../../services/student-task.service";
+import {SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {HttpClient} from "@angular/common/http";
 
 declare var bootstrap: any;
 
@@ -10,86 +12,114 @@ declare var bootstrap: any;
   styleUrls: ['./dean-student.component.css']
 })
 export class DeanStudentComponent implements OnInit {
-  studentId: number;
-  assignments: number[] = [];
-  selectedAssignment: number | null = null;
-  currentResponse: any;
-  chatMessages: any[] = [];
-  newMessageText: string = '';
-  currentUserId: number = 1; // Замените на реальный ID текущего пользователя
-  editingMessage: any;
+  studentId!: number;
+  answer: any = null;
+  isLoading = true;
 
-  constructor(private studentService: StudentService, private route: ActivatedRoute, private router: Router) {
-    this.studentId = this.route.snapshot.params['studentId'];
+  ids: any[] = [];
+  selectedId: any;
+
+  statusOptions = ['Необходимо отправить задание', 'Ожидает проверки', 'Требует доработок', 'Задание выполнено'];
+  ratingOptions = ['-', 2, 3, 4, 5];
+  selectedStatus: string = '';
+  selectedRating: number = 1;
+
+  constructor(
+    private route: ActivatedRoute,
+    private studentTaskService: StudentTaskService,
+    private http: HttpClient
+  ) {
   }
 
   ngOnInit(): void {
-    this.assignments = this.studentService.getAssignments();
-    // Загрузите данные студента по его ID
-    this.loadStudentData();
+    this.studentId = +this.route.snapshot.paramMap.get('studentId')!;
+
+    let streamName = localStorage.getItem(SELECTED_STREAM_KEY)
+    this.http.get<any[]>(`${SERVER_URL}/task/get/all/ids/${streamName}`).subscribe((ids) => {
+      this.ids = ids.reverse()
+      this.selectedId = this.ids[0]
+      this.getLastAnswer(this.selectedId)
+    })
   }
 
-  loadStudentData() {
-    // Получите данные студента и назначьте их текущему ответу и чату
-    const student = this.studentService.getStudentById(this.studentId);
-    if (student) {
-      // TODO
-      // TODO
-      // TODO
-      // TODO
-      this.chatMessages = [];//student.chatMessages;
-    }
+  getLastAnswer(taskId: number): void {
+    this.isLoading = true;
+    this.selectedId = taskId
+    this.studentTaskService.getLastAnswer(taskId, this.studentId).subscribe(
+      (data) => {
+        this.answer = data;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching last answer', error);
+        this.isLoading = false;
+      }
+    );
   }
 
-  selectAssignment(assignment: number) {
-    this.selectedAssignment = assignment;
-    // Загрузите данные ответа на выбранное задание
-    this.currentResponse = this.getAssignmentResponse(this.studentId, assignment);
+  openModal(): void {
+    const modal = new bootstrap.Modal(document.getElementById('markModal'));
+    modal.show();
   }
 
-  getAssignmentResponse(studentId: number, assignment: number) {
-    // Реализуйте получение данных ответа студента на задание
-    return {
-      text: 'Текст ответа студента',
-      files: [
-        {name: 'file1.pdf', url: '#'},
-        {name: 'file2.docx', url: '#'}
-      ],
-      grade: 4,
-      status: 'submitted'
-    };
+  formatDate(timestamp: number, updated: boolean = false): string {
+
+    // Создаем объект Date из переданного timestamp
+    const date = new Date(timestamp * 1000);
+
+    // Получаем компоненты даты
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // месяцы от 0 до 11, поэтому добавляем 1
+    const year = date.getFullYear();
+
+    // Получаем компоненты времени
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    // Форматируем в нужный формат
+    const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
+
+    return updated ? `${formattedDate} (изменено)` : formattedDate;
   }
 
-  openGradeModal() {
-    const gradeModal = new bootstrap.Modal(document.getElementById('gradeModal'));
-    gradeModal.show();
+  openFileByUrl(url: any): void {
+    window.open(url, '_blank');
   }
 
-  saveGrade() {
-// Реализуйте сохранение оценки и статуса работы студента
-// Закройте модальное окно
-    const gradeModal = new bootstrap.Modal(document.getElementById('gradeModal'));
-    gradeModal.hide();
+  save() {
+    this.http.post(`${SERVER_URL}/answers/mark`, {
+      taskId: this.selectedId,
+      userId: this.studentId,
+      mark: Number(this.selectedRating) || 0,
+      completionStatus: this.statusOptions.findIndex((item) => item == this.selectedStatus),
+    }).subscribe(() => {
+      this.getLastAnswer(this.selectedId)
+      const modal = bootstrap.Modal.getInstance(document.getElementById('markModal'));
+      modal.hide();
+    })
   }
 
-  sendMessage() {
-// Реализуйте отправку сообщения в чат
+  cancel() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('markModal'));
+    modal.hide();
   }
 
-  editMessage(message: any) {
-    this.editingMessage = {...message};
-    const editMessageModal = new bootstrap.Modal(document.getElementById('editMessageModal'));
-    editMessageModal.show();
+  formatMark(mark: number) {
+    if (mark == 0)
+      return "Оценка отсутствует"
+    else
+      return `Оценка - ${mark}`
   }
 
-  saveEditedMessage() {
-// Реализуйте сохранение отредактированного сообщения
-// Закройте модальное окно
-    const editMessageModal = new bootstrap.Modal(document.getElementById('editMessageModal'));
-    editMessageModal.hide();
-  }
-
-  deleteMessage(message: any) {
-// Реализуйте удаление сообщения
+  formatStatus(status: number) {
+    if (status == 0)
+      return "Необходимо отправить задание"
+    if (status == 1)
+      return "Ожидает проверки"
+    if (status == 2)
+      return "Требует доработок"
+    if (status == 3)
+      return "Задание выполнено"
+    return "Статус не распознан"
   }
 }

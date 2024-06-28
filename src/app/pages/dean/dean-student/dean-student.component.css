@@ -1,81 +1,96 @@
-/* Стили для панели выбора задания */
-.btn-group {
-  margin-bottom: 20px;
-}
-
-/* Стили для отображения ответа студента */
 .card {
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
-
-.card-header {
-  background-color: #007bff;
-  color: #fff;
-}
-
 .card-body {
-  padding: 20px;
+  position: relative;
+}
+.input-group {
+  margin-top: 1rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Выравнивание по центру по горизонтали */
+  gap: 10px; /* Расстояние между кнопками */
+  padding: 20px; /* Отступы вокруг контейнера */
+}
+
+
+.styled-small {
+  color: white;
+  background-color: #e53333; /* Нежно-красный фон */
+  border-radius: 5px; /* Скругленные углы */
+  padding: 2px 5px; /* Внутренние отступы */
 }
 
 .file-list {
-  list-style-type: none;
-  padding: 0;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
 }
 
-.file-list li {
-  margin-bottom: 5px;
+.card2 {
+  position: relative;
+  width: 200px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-.grade-status {
-  margin-top: 10px;
+.card2:hover {
+  transform: scale(1.05);
 }
 
-/* Стили для чата со студентом */
-.chat-box {
-  border: 1px solid #ccc;
-  padding: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 20px;
+.card2-body {
+  padding: 1rem;
+  position: relative;
 }
 
-.message {
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f9f9f9;
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
 }
 
-.message small {
-  color: #6c757d;
+.loading {
+  pointer-events: none;
 }
 
-.message .btn {
-  margin-left: 5px;
+.upload-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-/* Стили для модальных окон */
-.modal-body {
-  padding: 20px;
+.upload-btn:hover {
+  background-color: #0056b3;
 }
 
-.modal-footer {
-  justify-content: space-between;
-}
-
-/* Дополнительные стили для кнопок и иконок */
-.btn-sm {
-  padding: 0.25rem 0.5rem;
-}
-
-.btn-outline-secondary {
-  color: #6c757d;
-}
-
-.btn-outline-secondary:hover {
-  color: #333;
-}
-
-.fa-pencil-alt, .fa-trash-alt {
-  font-size: 16px;
+.styled-small {
+  color: #000000;
+  background-color: #d2d2d2;
+  border-radius: 8px;
+  padding: 2px 5px;
 }

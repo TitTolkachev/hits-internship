@@ -1,1 +1,74 @@
-<p>GG</p>
+<div class="start-50">
+  <div class="button-container">
+    <div *ngFor="let id of ids; let i = index">
+      <button *ngIf="id === selectedId" class="btn btn-primary ">{{i + 1}}</button>
+      <button *ngIf="id != selectedId" class="btn btn-outline-primary " (click)="getLastAnswer(id)">{{i + 1}}</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="text-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="!isLoading" class="card">
+
+  <div class="card-header d-flex justify-content-between">
+    <div style="display: flex; align-items: center">
+      <small>{{formatMark(answer.mark)}}</small>
+      <small class="styled-small ms-2">{{formatStatus(answer.completionStatus)}}</small>
+      <small *ngIf="answer && answer.sentDate != 0" class="ms-3">{{formatDate(answer.sentDate)}}</small>
+    </div>
+    <div>
+      <button class="btn btn-primary btn-sm" (click)="openModal()">Оценить</button>
+    </div>
+  </div>
+
+  <div *ngIf="answer && answer.sentDate != 0" class="card-body">
+    <p class="card-text" style="white-space: pre-line">{{answer.text}}</p>
+
+    <!-- Файлы -->
+    <div class="file-list mt-2">
+      <div *ngFor="let url of answer.files; let i = index" class="card2">
+        <div class="card2-body">
+          <h5 class="card-title" (click)="openFileByUrl(url)">{{ i + 1 }} файл</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal для выставления оценки -->
+<div class="modal fade" id="markModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Оценка и статус</h4>
+        <button type="button" class="close" aria-label="Close" (click)="cancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="status">Статус</label>
+          <select id="status" class="form-control" [(ngModel)]="selectedStatus">
+            <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rating">Оценка</label>
+          <select id="rating" class="form-control" [(ngModel)]="selectedRating">
+            <option *ngFor="let rating of ratingOptions" [value]="rating">{{rating}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="save()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
