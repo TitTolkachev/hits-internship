@@ -88,9 +88,10 @@ export class DeanTasksComponent implements OnInit {
       .concat(this.uploadedFiles)
 
     if (this.isEditingAnnouncement) {
-      this.http.patch(`${SERVER_URL}/task/update`, {
-        id: this.currentAnnouncementId,
-        text: this.currentTaskText
+      this.http.patch(`${SERVER_URL}/task/update/${this.currentAnnouncementId}`, {
+        text: this.currentTaskText,
+        deadlineDate : epochTime,
+        attachments: attachments,
       }).subscribe(() => {
         this.closeModal('announcementModal')
         this.loadAnnouncements();
@@ -114,8 +115,7 @@ export class DeanTasksComponent implements OnInit {
   }
 
   addComment(announcementId: number) {
-    this.http.post(`${SERVER_URL}/announcements/comments/create`, {
-      id: announcementId,
+    this.http.post(`${SERVER_URL}/task/create/comment/${announcementId}`, {
       text: this.newCommentText[announcementId]
     }).subscribe(() => {
       this.loadAnnouncements();
@@ -124,9 +124,7 @@ export class DeanTasksComponent implements OnInit {
   }
 
   deleteAnnouncement() {
-    this.http.delete(`${SERVER_URL}/announcements/delete`, {
-      body: {id: this.currentAnnouncementId}
-    }).subscribe(() => {
+    this.http.delete(`${SERVER_URL}/task/delete/${this.currentAnnouncementId}`).subscribe(() => {
       this.loadAnnouncements();
       this.closeModal('deleteConfirmationModal')
     });
