@@ -31,6 +31,7 @@ import { AdminStudentsComponent } from './pages/admin/admin-students/admin-stude
 import { AdminAnnouncementsComponent } from './pages/admin/admin-announcements/admin-announcements.component';
 import { DeanStudentComponent } from './pages/dean/dean-student/dean-student.component';
 import { StudentTaskComponent } from './pages/student/student-task/student-task.component';
+import { DeanUserComponent } from './pages/dean/dean-user/dean-user.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { StudentTaskComponent } from './pages/student/student-task/student-task.
     AdminAnnouncementsComponent,
     DeanStudentComponent,
     StudentTaskComponent,
+    DeanUserComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

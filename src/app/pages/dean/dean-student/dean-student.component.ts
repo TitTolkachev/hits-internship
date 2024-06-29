@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {StudentTaskService} from "../../../services/student-task.service";
 import {SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
 import {HttpClient} from "@angular/common/http";
@@ -27,7 +27,8 @@ export class DeanStudentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private studentTaskService: StudentTaskService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router,
   ) {
   }
 
@@ -121,5 +122,9 @@ export class DeanStudentComponent implements OnInit {
     if (status == 3)
       return "Задание выполнено"
     return "Статус не распознан"
+  }
+
+  navigateToStudentProfile() {
+    this.router.navigateByUrl(`/dean/user/${this.studentId}`).then()
   }
 }

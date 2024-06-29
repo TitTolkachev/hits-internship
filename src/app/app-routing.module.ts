@@ -21,6 +21,7 @@ import {AdminStudentsComponent} from "./pages/admin/admin-students/admin-student
 import {AdminAnnouncementsComponent} from "./pages/admin/admin-announcements/admin-announcements.component";
 import {DeanStudentComponent} from "./pages/dean/dean-student/dean-student.component";
 import {StudentTaskComponent} from "./pages/student/student-task/student-task.component";
+import {DeanUserComponent} from "./pages/dean/dean-user/dean-user.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -36,6 +37,7 @@ const routes: Routes = [
       {path: 'profile', component: ProfileComponent},
       {path: 'task/:id', component: DeanTasksComponent},
       {path: 'student/:studentId', component: DeanStudentComponent},
+      {path: 'user/:studentId', component: DeanUserComponent},
     ]
   },
   {
