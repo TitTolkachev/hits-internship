@@ -52,7 +52,7 @@ export class DeanUserComponent implements OnInit {
   }
 
   getChatHistory(): void {
-    this.http.get<any[]>(`${SERVER_URL}/chat/get/dean/${this.studentId}`).subscribe((data: any[]) => {
+    this.http.get<any[]>(`${SERVER_URL}/chats/get/dean/${this.studentId}`).subscribe((data: any[]) => {
       this.messages = data;
     });
   }
@@ -63,7 +63,7 @@ export class DeanUserComponent implements OnInit {
         studentId: this.studentId,
         message: this.newMessage
       };
-      this.http.post(`${SERVER_URL}/chat/message/dean`, messageData).subscribe(() => {
+      this.http.post(`${SERVER_URL}/chats/message/dean`, messageData).subscribe(() => {
         this.getChatHistory();
         this.newMessage = '';
       });
