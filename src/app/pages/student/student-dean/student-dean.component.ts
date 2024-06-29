@@ -1,19 +1,19 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
-import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {ActivatedRoute} from "@angular/router";
+import {HttpClient} from "@angular/common/http";
 import {PartnerService} from "../../../services/partner.service";
-import {Jwt} from "../../../models/jwt";
 import {jwtDecode} from "jwt-decode";
+import {Jwt} from "../../../models/jwt";
+import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-dean-user',
-  templateUrl: './dean-user.component.html',
-  styleUrls: ['./dean-user.component.css']
+  selector: 'app-student-dean',
+  templateUrl: './student-dean.component.html',
+  styleUrl: './student-dean.component.css'
 })
-export class DeanUserComponent implements OnInit {
+export class StudentDeanComponent implements OnInit {
   studentId: number = 0;
   studentInfo: any = {};
   messages: any[] = [];
@@ -30,13 +30,11 @@ export class DeanUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserId = Number(jwtDecode<Jwt>(localStorage.getItem(ACCESS_TOKEN_KEY) || '').sub)
-    this.route.params.subscribe(params => {
-      this.studentId = +params['studentId'];
-      this.getStudentInfo();
-      this.getChatHistory();
-      this.getTopCompanies();
-      this.getTopStacks();
-    });
+    this.studentId = this.currentUserId;
+    this.getStudentInfo();
+    this.getChatHistory();
+    this.getTopCompanies();
+    this.getTopStacks();
   }
 
   getStudentInfo(): void {

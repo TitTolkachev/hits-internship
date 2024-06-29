@@ -32,6 +32,7 @@ import { AdminAnnouncementsComponent } from './pages/admin/admin-announcements/a
 import { DeanStudentComponent } from './pages/dean/dean-student/dean-student.component';
 import { StudentTaskComponent } from './pages/student/student-task/student-task.component';
 import { DeanUserComponent } from './pages/dean/dean-user/dean-user.component';
+import { StudentDeanComponent } from './pages/student/student-dean/student-dean.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { DeanUserComponent } from './pages/dean/dean-user/dean-user.component';
     DeanStudentComponent,
     StudentTaskComponent,
     DeanUserComponent,
+    StudentDeanComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
