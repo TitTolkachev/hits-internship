@@ -51,7 +51,7 @@ export class AdminUserComponent implements OnInit {
   }
 
   getChatHistory(): void {
-    this.http.get<any[]>(`${SERVER_URL}/chats/get/dean/${this.studentId}`).subscribe((data: any[]) => {
+    this.http.get<any[]>(`${SERVER_URL}/chats/get/admin/${this.studentId}`).subscribe((data: any[]) => {
       this.messages = data;
     });
   }
@@ -62,7 +62,7 @@ export class AdminUserComponent implements OnInit {
         studentId: this.studentId,
         message: this.newMessage
       };
-      this.http.post(`${SERVER_URL}/chats/message/dean`, messageData).subscribe(() => {
+      this.http.post(`${SERVER_URL}/chats/message/admin`, messageData).subscribe(() => {
         this.getChatHistory();
         this.newMessage = '';
       });
