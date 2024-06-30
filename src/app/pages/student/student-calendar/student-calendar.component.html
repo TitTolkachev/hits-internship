@@ -1,1 +1,45 @@
-<app-calendar></app-calendar>
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <button class="btn btn-primary" (click)="previousMonth()"><i class="bi bi-arrow-left"></i> предыдущий</button>
+    <h2>{{ monthName }} {{ year }}</h2>
+    <button class="btn btn-primary" (click)="nextMonth()">следующий <i class="bi bi-arrow-right"></i></button>
+  </div>
+
+  <table class="table table-bordered mb-5">
+    <thead>
+    <tr>
+      <th *ngFor="let day of shortWeekDays">{{ day }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let week of calendar">
+      <td *ngFor="let day of week" [class.today]="isToday(day)">
+        <div>{{ day.date }}</div>
+        <div *ngFor="let meeting of day.meetings" class="meeting" (click)="openMeetingModal(meeting, $event)">
+          {{ meeting.time * 1000 | date: 'HH:mm' }}
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- View Meeting Modal -->
+<div class="modal fade" id="viewMeetingModal" tabindex="-1" aria-labelledby="viewMeetingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewMeetingModalLabel">Информация о встрече</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Компания:</strong> {{ selectedMeeting?.companyName }}</p>
+        <p><strong>Дата и время:</strong> {{ (selectedMeeting ? selectedMeeting.time * 1000 : 0) | date: 'dd.MM.yyyy, HH:mm' }}</p>
+        <p><strong>Аудитория:</strong> {{ selectedMeeting?.auditorium }}</p>
+        <p *ngIf="selectedMeeting?.comment != null && selectedMeeting?.comment != ''">
+          <strong>Комментарий:</strong> {{ selectedMeeting?.comment }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

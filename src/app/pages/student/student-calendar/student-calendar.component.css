@@ -1,0 +1,40 @@
+.table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table th {
+  width: 14.28%; /* 100% / 7 дней недели */
+  height: 50px;
+  vertical-align: top;
+  position: relative;
+
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+  width: 14.28%; /* 100% / 7 дней недели */
+  height: 130px; /* Увеличенная высота элементов */
+  vertical-align: top;
+  position: relative;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.table td.today {
+  border: 3px dashed #0B5ED7;
+}
+
+.meeting {
+  background-color: #e9ecef;
+  border: 1px solid #ccc;
+  padding: 2px;
+  margin-top: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}

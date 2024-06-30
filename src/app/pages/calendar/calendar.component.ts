@@ -3,7 +3,6 @@ import {Meeting} from '../../models/meeting.model';
 import {SELECTED_STREAM_KEY, SERVER_URL} from "../../constants";
 import {PartnerService} from "../../services/partner.service";
 import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
 
 declare var bootstrap: any;
 
@@ -33,7 +32,6 @@ export class CalendarComponent {
   constructor(
     private partnerService: PartnerService,
     private http: HttpClient,
-    private router: Router,
   ) {
     const today = new Date();
     this.year = today.getFullYear();
