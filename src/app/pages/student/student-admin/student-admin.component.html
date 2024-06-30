@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          Чат
+        </div>
+        <div class="card-header">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Напишите сообщение" [(ngModel)]="newMessage">
+            <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+          </div>
+        </div>
+        <div class="card-body" *ngFor="let message of messages">
+          <div
+            [ngClass]="{'text-end': message.userId === currentUserId, 'text-start': message.userId !== currentUserId}">
+            <div>
+              <div>
+                <small class="card-subtitle mb-1 text-muted">{{formatDate(message.time)}}</small>
+                <p class="card-title">{{message.name}} {{message.surname}}</p>
+                <p>{{message.message}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-header">
+          Студент
+        </div>
+        <div class="card-body">
+          <p><strong>Логин</strong> {{studentInfo.login}}</p>
+          <p><strong>Имя</strong> {{studentInfo.name}}</p>
+          <p><strong>Фамилия</strong> {{studentInfo.surname}}</p>
+          <p><strong>Место стажировки</strong> {{ studentInfo.company != null ? studentInfo.company.name : ''}}</p>
+          <p><strong>Стек стажировки</strong> {{studentInfo.techStack != null ? studentInfo.techStack.name : ''}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

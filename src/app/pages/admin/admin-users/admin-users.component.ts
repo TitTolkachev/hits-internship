@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {StudentService} from "../../../services/student.service";
 import {Router} from "@angular/router";
-import {SELECTED_STREAM_KEY} from "../../../constants";
+import {SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-admin-users',
@@ -11,16 +12,15 @@ import {SELECTED_STREAM_KEY} from "../../../constants";
 export class AdminUsersComponent implements OnInit {
   students: any[] = [];
   searchTerm: string = '';
-  assignments: number[] = [1, 2, 3];
   selectedStudent: number | null = null;
 
-  constructor(private studentService: StudentService, private router: Router) {
+  constructor(private studentService: StudentService, private router: Router, private http: HttpClient) {
   }
 
   ngOnInit(): void {
-    this.studentService.getStudents(localStorage.getItem(SELECTED_STREAM_KEY) || '').subscribe(data => {
-        this.students = data.students;
-        this.assignments = Array.from({length: data.taskNum}, (_, i) => i + 1);
+    const streamName = localStorage.getItem(SELECTED_STREAM_KEY) || ''
+    this.http.get<any[]>(`${SERVER_URL}/stream/${streamName}/students`).subscribe(data => {
+        this.students = data;
       }
     );
   }

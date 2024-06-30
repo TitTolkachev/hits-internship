@@ -27,6 +27,7 @@ import {AdminUserComponent} from "./pages/admin/admin-user/admin-user.component"
 import {
   StudentPartnerDetailComponentComponent
 } from "./pages/student/student-partner-detail-component/student-partner-detail-component.component";
+import {StudentAdminComponent} from "./pages/student/student-admin/student-admin.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -55,6 +56,7 @@ const routes: Routes = [
       {path: 'task/:id', component: StudentTaskComponent},
       {path: 'profile', component: ProfileComponent},
       {path: 'dean', component: StudentDeanComponent},
+      {path: 'admin', component: StudentAdminComponent},
     ]
   },
   {
