@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Поиск студента по фамилии и имени" [(ngModel)]="searchTerm">
+    </div>
+  </div>
+  <table class="table table-hover">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Студент</th>
+      <ng-container *ngFor="let assignment of assignments">
+        <th scope="col">Задание {{ assignment }}</th>
+      </ng-container>
+      <th scope="col">Стажировка</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let student of filteredStudents(); let i = index" (click)="goToStudent(student.id)" [ngClass]="{'table-active': selectedStudent === student.id}">
+      <th scope="row" class="table-secondary">{{ i + 1 }}</th>
+      <td>{{ student.surname }} {{ student.name }}</td>
+      <ng-container *ngFor="let assignment of assignments">
+        <td [ngClass]="getGradeClass(student.marks, assignment)">
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) > 1">
+            <i class="bi bi-check"></i> {{ getAssignmentGrade(student.marks, assignment) }}
+          </ng-container>
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 1">
+            <i class="bi bi-clock"></i> {{ getAssignmentGrade(student.marks, assignment) }}
+          </ng-container>
+          <ng-container *ngIf="getAssignmentStatus(student.marks, assignment) === 0">
+            -
+          </ng-container>
+        </td>
+      </ng-container>
+      <td>{{ student.companyName }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

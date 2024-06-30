@@ -17,12 +17,13 @@ import {DeanUsersComponent} from "./pages/dean/dean-users/dean-users.component";
 import {DeanTasksComponent} from "./pages/dean/dean-tasks/dean-tasks.component";
 import {DeanAnnouncementsComponent} from "./pages/dean/dean-announcements/dean-announcements.component";
 import {InviteComponent} from "./pages/invite/invite.component";
-import {AdminStudentsComponent} from "./pages/admin/admin-students/admin-students.component";
 import {AdminAnnouncementsComponent} from "./pages/admin/admin-announcements/admin-announcements.component";
 import {DeanStudentComponent} from "./pages/dean/dean-student/dean-student.component";
 import {StudentTaskComponent} from "./pages/student/student-task/student-task.component";
 import {DeanUserComponent} from "./pages/dean/dean-user/dean-user.component";
 import {StudentDeanComponent} from "./pages/student/student-dean/student-dean.component";
+import {AdminUsersComponent} from "./pages/admin/admin-users/admin-users.component";
+import {AdminUserComponent} from "./pages/admin/admin-user/admin-user.component";
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -57,7 +58,8 @@ const routes: Routes = [
       {path: 'announcements', component: AdminAnnouncementsComponent},
       {path: 'calendar', component: CalendarComponent},
       {path: 'partners', component: PartnersComponent},
-      {path: 'students', component: AdminStudentsComponent},
+      {path: 'students', component: AdminUsersComponent},
+      {path: 'student/:studentId', component: AdminUserComponent},
       {path: 'partners/:id', component: PartnerDetailComponent},
       {path: 'profile', component: ProfileComponent},
     ]
