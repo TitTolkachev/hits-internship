@@ -1,7 +1,12 @@
 export interface Meeting {
-  id: string;
-  dateTimeEpochMs: number;
+  id: number;
+  time: number;
+  companyId: number | null;
+  companyName: string;
+  auditorium: string;
   comment: string;
-  audience: string;
-  company: string;
+  countYes: 0,
+  countOnline: 0,
+  countNo: 0,
+  userVote: string | null
 }

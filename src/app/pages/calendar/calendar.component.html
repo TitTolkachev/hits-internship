@@ -18,7 +18,7 @@
           [class.today]="isToday(day)">
         <div>{{ day.date }}</div>
         <div *ngFor="let meeting of day.meetings" class="meeting" (click)="openMeetingModal(meeting, $event)">
-          {{ meeting.dateTimeEpochMs | date: 'HH:mm' }}
+          {{ meeting.time * 1000 | date: 'HH:mm' }}
         </div>
       </td>
     </tr>
@@ -41,16 +41,20 @@
             <input type="time" id="meetingTime" class="form-control" [(ngModel)]="newMeeting.time" name="time" required>
           </div>
           <div class="mb-3">
-            <label for="meetingComment" class="form-label">Комментарий</label>
-            <input type="text" id="meetingComment" class="form-control" [(ngModel)]="newMeeting.comment" name="comment">
-          </div>
-          <div class="mb-3">
-            <label for="meetingAudience" class="form-label">Аудитория</label>
+            <label for="meetingAudience" class="form-label">Место проведения</label>
             <input type="text" id="meetingAudience" class="form-control" [(ngModel)]="newMeeting.audience" name="audience">
           </div>
+
           <div class="mb-3">
-            <label for="meetingCompany" class="form-label">Компания</label>
-            <input type="text" id="meetingCompany" class="form-control" [(ngModel)]="newMeeting.company" name="company">
+            <label for="companySelect" class="form-label">Компания</label>
+            <select id="companySelect" class="form-select" [(ngModel)]="newMeeting.companyId" name="selectedCompanyId">
+              <option *ngFor="let company of topCompanies" [value]="company.id">{{company.name}}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="meetingComment" class="form-label">Комментарий</label>
+            <input type="text" id="meetingComment" class="form-control" [(ngModel)]="newMeeting.comment" name="comment">
           </div>
           <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>
@@ -68,10 +72,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p><strong>Время:</strong> {{ selectedMeeting?.dateTimeEpochMs | date: 'yyyy-MM-dd HH:mm' }}</p>
+        <p><strong>Дата и время:</strong> {{ (selectedMeeting ? selectedMeeting.time * 1000 : 0) | date: 'dd.MM.yyyy, HH:mm' }}</p>
         <p><strong>Комментарий:</strong> {{ selectedMeeting?.comment }}</p>
-        <p><strong>Аудитория:</strong> {{ selectedMeeting?.audience }}</p>
-        <p><strong>Компания:</strong> {{ selectedMeeting?.company }}</p>
+        <p><strong>Аудитория:</strong> {{ selectedMeeting?.auditorium }}</p>
+        <p><strong>Компания:</strong> {{ selectedMeeting?.companyId }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="deleteMeeting()">Удалить</button>
+        <button type="submit" class="btn btn-primary" (click)="updateMeeting()">Сохранить</button>
       </div>
     </div>
   </div>
