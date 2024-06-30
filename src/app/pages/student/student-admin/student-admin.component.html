@@ -12,15 +12,12 @@
           </div>
         </div>
         <div class="card-body" *ngFor="let message of messages">
-          <div
-            [ngClass]="{'text-end': message.userId === currentUserId, 'text-start': message.userId !== currentUserId}">
-            <div>
+          <div style="align-items: end" [ngClass]="{'text-end': message.userId === currentUserId, 'text-start': message.userId !== currentUserId}">
               <div>
                 <small class="card-subtitle mb-1 text-muted">{{formatDate(message.time)}}</small>
                 <p class="card-title">{{message.name}} {{message.surname}}</p>
-                <p>{{message.message}}</p>
+                <p style="display: inline-block; text-align: start">{{message.message}}</p>
               </div>
-            </div>
           </div>
         </div>
       </div>

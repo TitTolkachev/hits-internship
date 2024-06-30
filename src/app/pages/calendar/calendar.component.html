@@ -1,8 +1,8 @@
 <div class="container">
   <div class="d-flex justify-content-between align-items-center my-3">
-    <button class="btn btn-primary" (click)="previousMonth()">Пред.</button>
+    <button class="btn btn-primary" (click)="previousMonth()"><i class="bi bi-arrow-left"></i> предыдущий</button>
     <h2>{{ monthName }} {{ year }}</h2>
-    <button class="btn btn-primary" (click)="nextMonth()">След.</button>
+    <button class="btn btn-primary" (click)="nextMonth()">следующий <i class="bi bi-arrow-right"></i></button>
   </div>
 
   <table class="table table-bordered mb-5">
@@ -56,7 +56,9 @@
             <label for="meetingComment" class="form-label">Комментарий</label>
             <input type="text" id="meetingComment" class="form-control" [(ngModel)]="newMeeting.comment" name="comment">
           </div>
-          <button type="submit" class="btn btn-primary">Сохранить</button>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
         </form>
       </div>
     </div>

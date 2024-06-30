@@ -13,6 +13,8 @@
 <!--        <th scope="col">Задание {{ assignment }}</th>-->
 <!--      </ng-container>-->
       <th scope="col">Стажировка</th>
+      <th scope="col">Чат</th>
+      <th scope="col">Комментарий</th>
     </tr>
     </thead>
     <tbody>
@@ -33,6 +35,8 @@
 <!--        </td>-->
 <!--      </ng-container>-->
       <td>{{ student.companyName }}</td>
+      <td>{{ formatDate(student.lastMessageTime) }}</td>
+      <td>{{ student.comment }}</td>
     </tr>
     </tbody>
   </table>
