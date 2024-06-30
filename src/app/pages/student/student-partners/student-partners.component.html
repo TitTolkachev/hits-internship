@@ -1,1 +1,22 @@
-<p>student-partners works!</p>
+<div class="container mt-4">
+  <div class="text-center">
+    <h2>Компании-партнеры</h2>
+    <p>Ниже представлен список наших ценных партнеров.</p>
+  </div>
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="row">
+    <div class="col-md-4" *ngFor="let partner of partners" (click)="viewPartner(partner.id)">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ partner.name }}</h5>
+          <p class="card-text">{{ formatTime(partner.time) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

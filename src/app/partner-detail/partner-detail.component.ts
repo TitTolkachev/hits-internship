@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class PartnerDetailComponent implements OnInit {
     hitsContact: ''
   };
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {
+  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -177,5 +177,9 @@ export class PartnerDetailComponent implements OnInit {
     const modalElement = document.getElementById('editCompanyModal');
     const modal = bootstrap.Modal.getInstance(modalElement);
     modal.hide();
+  }
+
+  openStudent(studentId: string): void {
+    this.router.navigateByUrl(`/admin/student/${studentId}`).then()
   }
 }

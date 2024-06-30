@@ -10,7 +10,7 @@
 
   <h3>Студенты</h3>
   <ul class="list-group mb-3">
-    <li *ngFor="let student of company.students" class="list-group-item">
+    <li *ngFor="let student of company.students" class="list-group-item" (click)="openStudent(student.id)">
       {{ student.name }} {{ student.surname }}
     </li>
     <li *ngIf="company.students.length === 0" class="list-group-item text-muted">

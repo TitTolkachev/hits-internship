@@ -17,18 +17,8 @@
   transition: transform 0.2s;
 }
 
-
-.list-group-item {
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
 .card:hover {
   transform: scale(1.05);
-}
-
-.list-group-item:hover {
-  background-color: #ececec;
 }
 
 .card-body {
