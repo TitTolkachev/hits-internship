@@ -132,4 +132,26 @@ export class StudentCalendarComponent {
       this.updateCalendar();
     })
   }
+
+  sendVote(vote: string) {
+    this.http.post(`${SERVER_URL}/meets/vote`, {
+      id: this.selectedMeeting?.id,
+      meetStatus: vote,
+    }).subscribe(() => {
+      if (this.selectedMeeting?.userVote === 'Online')
+        this.selectedMeeting ? this.selectedMeeting.countOnline-- : {};
+      if (this.selectedMeeting?.userVote === 'Yes')
+        this.selectedMeeting ? this.selectedMeeting.countYes-- : {};
+      if (this.selectedMeeting?.userVote === 'No')
+        this.selectedMeeting ? this.selectedMeeting.countNo-- : {};
+      this.selectedMeeting ? this.selectedMeeting.userVote = vote : {};
+      if (this.selectedMeeting?.userVote === 'Online')
+        this.selectedMeeting ? this.selectedMeeting.countOnline++ : {};
+      if (this.selectedMeeting?.userVote === 'Yes')
+        this.selectedMeeting ? this.selectedMeeting.countYes++ : {};
+      if (this.selectedMeeting?.userVote === 'No')
+        this.selectedMeeting ? this.selectedMeeting.countNo++ : {};
+      this.loadMeetings()
+    })
+  }
 }

@@ -8,12 +8,12 @@
   <table class="table table-bordered mb-5">
     <thead>
     <tr>
-      <th *ngFor="let day of shortWeekDays">{{ day }}</th>
+      <th class="calendar-th" *ngFor="let day of shortWeekDays">{{ day }}</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let week of calendar">
-      <td *ngFor="let day of week" [class.today]="isToday(day)">
+      <td class="calendar-td" *ngFor="let day of week" [class.today]="isToday(day)">
         <div>{{ day.date }}</div>
         <div *ngFor="let meeting of day.meetings" class="meeting" (click)="openMeetingModal(meeting, $event)">
           {{ meeting.time * 1000 | date: 'HH:mm' }}
@@ -39,6 +39,33 @@
         <p *ngIf="selectedMeeting?.comment != null && selectedMeeting?.comment != ''">
           <strong>Комментарий:</strong> {{ selectedMeeting?.comment }}
         </p>
+
+        <br/>
+        <table class="table">
+          <thead class="thead-light">
+          <tr>
+            <th scope="col">Очно</th>
+            <th scope="col">Онлайн</th>
+            <th scope="col">Не придет</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td class="count-td" (click)="sendVote('Yes')">
+              {{ selectedMeeting?.countYes }}
+              <i *ngIf="selectedMeeting?.userVote==='Yes'" class="bi-check"></i>
+            </td>
+            <td class="count-td" (click)="sendVote('Online')">
+              {{ selectedMeeting?.countOnline }}
+              <i *ngIf="selectedMeeting?.userVote==='Online'" class="bi-check"></i>
+            </td>
+            <td class="count-td" (click)="sendVote('No')">
+              {{ selectedMeeting?.countNo }}
+              <i *ngIf="selectedMeeting?.userVote==='No'" class="bi-check"></i>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
