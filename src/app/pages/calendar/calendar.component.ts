@@ -135,20 +135,18 @@ export class CalendarComponent {
   }
 
   updateMeeting() {
-    if (this.selectedDate) {
       const [hours, minutes] = this.newMeeting.time.split(':').map(Number);
-      const meetingDateTime = new Date(this.selectedDate);
+      const meetingDateTime = new Date((this.selectedMeeting?.time || 0) * 1000);
       meetingDateTime.setHours(hours, minutes);
 
-      this.http.post(`${SERVER_URL}/meets/update/${1}`, {
+      this.http.put(`${SERVER_URL}/meets/update/${this.selectedMeeting?.id}`, {
         auditorium: this.newMeeting.audience,
         comment: this.newMeeting.comment,
         time: meetingDateTime.getTime() / 1000,
       }).subscribe(() => {
         this.loadMeetings()
-        bootstrap.Modal.getInstance(document.getElementById('createMeetingModal')).hide();
+        bootstrap.Modal.getInstance(document.getElementById('viewMeetingModal')).hide();
       })
-    }
   }
 
   deleteMeeting() {
@@ -162,6 +160,12 @@ export class CalendarComponent {
   openMeetingModal(meeting: Meeting, event: MouseEvent) {
     event.stopPropagation();
     this.selectedMeeting = meeting;
+    const date = new Date(meeting.time * 1000);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    this.newMeeting.time = hours + ':' + minutes;
+    this.newMeeting.audience = meeting.auditorium;
+    this.newMeeting.comment = meeting.comment;
     const modal = new bootstrap.Modal(document.getElementById('viewMeetingModal'));
     modal.show();
   }

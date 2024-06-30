@@ -15,7 +15,7 @@
   border-bottom: 2px solid #dee2e6;
 }
 
-.table td {
+.table td.calendar-td {
   width: 14.28%; /* 100% / 7 дней недели */
   height: 130px; /* Увеличенная высота элементов */
   vertical-align: top;
@@ -24,6 +24,10 @@
   padding: 5px;
   border-radius: 10px;
   border: 1px solid #dee2e6;
+}
+
+.table td.count-td {
+  text-align: center;
 }
 
 .table td:hover {

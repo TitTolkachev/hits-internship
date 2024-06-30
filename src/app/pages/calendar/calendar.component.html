@@ -8,12 +8,12 @@
   <table class="table table-bordered mb-5">
     <thead>
     <tr>
-      <th *ngFor="let day of shortWeekDays">{{ day }}</th>
+      <th class="calendar-th" *ngFor="let day of shortWeekDays">{{ day }}</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let week of calendar">
-      <td *ngFor="let day of week"
+      <td class="calendar-td" *ngFor="let day of week"
           (click)="openCreateMeetingModal(day)"
           [class.today]="isToday(day)">
         <div>{{ day.date }}</div>
@@ -74,10 +74,39 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p><strong>Дата и время:</strong> {{ (selectedMeeting ? selectedMeeting.time * 1000 : 0) | date: 'dd.MM.yyyy, HH:mm' }}</p>
-        <p><strong>Комментарий:</strong> {{ selectedMeeting?.comment }}</p>
-        <p><strong>Аудитория:</strong> {{ selectedMeeting?.auditorium }}</p>
-        <p><strong>Компания:</strong> {{ selectedMeeting?.companyId }}</p>
+        <p><strong>{{ selectedMeeting?.companyName }}</strong></p>
+
+        <div class="mb-3">
+          <label for="meetingUpdTime" class="form-label">Время</label>
+          <input type="time" id="meetingUpdTime" class="form-control" [(ngModel)]="newMeeting.time" name="time" required>
+        </div>
+        <div class="mb-3">
+          <label for="meetingUpdAudience" class="form-label">Место проведения</label>
+          <input type="text" id="meetingUpdAudience" class="form-control" [(ngModel)]="newMeeting.audience" name="audience">
+        </div>
+
+        <div class="mb-3">
+          <label for="meetingUpdComment" class="form-label">Комментарий</label>
+          <input type="text" id="meetingUpdComment" class="form-control" [(ngModel)]="newMeeting.comment" name="comment">
+        </div>
+
+        <br/>
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Очно</th>
+              <th scope="col">Онлайн</th>
+              <th scope="col">Не придет</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td class="count-td">{{ selectedMeeting?.countYes }}</td>
+            <td class="count-td">{{ selectedMeeting?.countOnline }}</td>
+            <td class="count-td">{{ selectedMeeting?.countNo }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" (click)="deleteMeeting()">Удалить</button>
