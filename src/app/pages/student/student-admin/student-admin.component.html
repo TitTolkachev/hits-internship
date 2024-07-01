@@ -12,12 +12,20 @@
           </div>
         </div>
         <div class="card-body" *ngFor="let message of messages">
-          <div style="align-items: end" [ngClass]="{'text-end': message.userId === currentUserId, 'text-start': message.userId !== currentUserId}">
-              <div>
-                <small class="card-subtitle mb-1 text-muted">{{formatDate(message.time)}}</small>
-                <p class="card-title">{{message.name}} {{message.surname}}</p>
-                <p style="display: inline-block; text-align: start">{{message.message}}</p>
-              </div>
+          <div *ngIf="message.userId === currentUserId" style="justify-content: end; width: 100%; display: flex">
+            <div style="max-width: 400px" [ngClass]="{'text-end': message.userId === currentUserId, 'text-start': message.userId !== currentUserId}">
+              <small class="card-subtitle mb-1 text-muted">{{formatDate(message.time)}}</small>
+              <p class="card-title">{{message.name}} {{message.surname}}</p>
+              <p style="display: inline-block; word-wrap:break-word; max-width: 100%; text-align: start">{{message.message}}</p>
+            </div>
+          </div>
+
+          <div *ngIf="message.userId !== currentUserId">
+            <div style="max-width: 400px" [ngClass]="{'text-end': message.userId === currentUserId, 'text-start': message.userId !== currentUserId}">
+              <small class="card-subtitle mb-1 text-muted">{{formatDate(message.time)}}</small>
+              <p class="card-title">{{message.name}} {{message.surname}}</p>
+              <p style="display: inline-block; word-wrap:break-word; max-width: 100%; text-align: start">{{message.message}}</p>
+            </div>
           </div>
         </div>
       </div>
