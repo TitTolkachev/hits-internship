@@ -20,7 +20,6 @@
   height: 130px; /* Увеличенная высота элементов */
   vertical-align: top;
   position: relative;
-  cursor: pointer;
   padding: 5px;
   border-radius: 10px;
   border: 1px solid #dee2e6;
@@ -43,6 +42,7 @@
   background-color: #e9ecef;
   border: 1px solid #ccc;
   padding: 2px;
+  cursor: pointer;
   margin-top: 5px;
   border-radius: 5px;
   font-size: 12px;

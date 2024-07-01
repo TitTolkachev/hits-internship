@@ -8,7 +8,7 @@
         <div class="card-header">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Напишите сообщение" [(ngModel)]="newMessage">
-            <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+            <button class="btn btn-primary" (click)="sendMessage()">Отправить</button>
           </div>
         </div>
         <div class="card-body" *ngFor="let message of messages">
@@ -23,17 +23,175 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card mb-3">
+      <div *ngIf="studentInfo.company != null" class="card mb-3">
         <div class="card-header">
           Студент
         </div>
         <div class="card-body">
-          <p><strong>Логин</strong> {{studentInfo.login}}</p>
-          <p><strong>Имя</strong> {{studentInfo.name}}</p>
-          <p><strong>Фамилия</strong> {{studentInfo.surname}}</p>
-          <p><strong>Место стажировки</strong> {{ studentInfo.company != null ? studentInfo.company.name : ''}}</p>
+          <p><strong>Место стажировки</strong> {{ studentInfo.company.name}}</p>
           <p><strong>Стек стажировки</strong> {{studentInfo.techStack != null ? studentInfo.techStack.name : ''}}</p>
         </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Компании
+          <button class="btn btn-outline-secondary btn-sm" (click)="openEditCompaniesModal()"><i class="bi bi-pencil"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="container">
+            <h6>Выберите компании, которые вам нравятся, и&nbsp;укажите приоритет</h6>
+            <p *ngFor="let company of studentInfo.topCompanies; let i = index">
+              {{i + 1}} - {{company.name}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Стеки
+          <button class="btn btn-outline-secondary btn-sm" (click)="openEditStacksModal()"><i class="bi bi-pencil"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="container">
+            <h6>Выберите стеки, которые вам нравятся, и&nbsp;укажите приоритет</h6>
+            <p *ngFor="let stack of studentInfo.topStacks; let i = index">
+              {{i + 1}} - {{stack.name}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Офферы
+          <button class="btn btn-outline-secondary btn-sm" (click)="openEditOfferedModal()"><i class="bi bi-pencil"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="container">
+            <h6>Укажите здесь компании, которые предложили вам стажировку</h6>
+            <p *ngFor="let company of studentInfo.offered; let i = index">
+              {{i + 1}} - {{company.name}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Edit Stacks -->
+<div class="modal fade" id="viewMeetingModal" tabindex="-1" aria-labelledby="viewMeetingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Выбранные стеки</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngFor="let stack of selectedStacks; let i = index" class="d-flex align-items-center mb-2">
+          <select [(ngModel)]="stack.id" class="form-select me-2">
+            <option *ngFor="let s of stacks" [value]="s.id">{{ s.name }}</option>
+          </select>
+          <input type="number" [(ngModel)]="stack.priority" class="form-control me-2" style="width: 80px;">
+          <button type="button" class="btn btn-danger" (click)="removeStackLine(i)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        <button type="button" class="btn btn-outline-secondary me-2" (click)="addStackLine()">Добавить строку</button>
+        <button type="button" class="btn btn-outline-primary ms-auto" (click)="openNewStackModal()">Добавить стек</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveEditStacks()">Сохранить</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Companies -->
+<div class="modal fade" id="editCompaniesModal" tabindex="-1" aria-labelledby="editCompaniesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Выбранные компании</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngFor="let company of selectedCompanies; let i = index" class="d-flex align-items-center mb-2">
+          <select [(ngModel)]="company.id" class="form-select me-2">
+            <option *ngFor="let s of companies" [value]="s.id">{{ s.name }}</option>
+          </select>
+          <input type="number" [(ngModel)]="company.priority" class="form-control me-2" style="width: 80px;">
+          <button type="button" class="btn btn-danger" (click)="removeCompanyLine(i)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        <button type="button" class="btn btn-outline-secondary" (click)="addCompanyLine()">Добавить строку</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveEditCompanies()">Сохранить</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Offered -->
+<div class="modal fade" id="editOfferedModal" tabindex="-1" aria-labelledby="editOfferedModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Выбранные компании</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngFor="let company of selectedOffered; let i = index" class="d-flex align-items-center mb-2">
+          <select [(ngModel)]="company.id" class="form-select me-2">
+            <option *ngFor="let s of companies" [value]="s.id">{{ s.name }}</option>
+          </select>
+          <input type="number" [(ngModel)]="company.priority" class="form-control me-2" style="width: 80px;">
+          <button type="button" class="btn btn-danger" (click)="removeOfferedLine(i)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        <button type="button" class="btn btn-outline-secondary me-2" (click)="addOfferedLine()">Добавить строку</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" (click)="saveEditOffered()">Сохранить</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Модальное окно для добавления нового стека -->
+<div class="modal fade" id="addStackModal" tabindex="-1" aria-labelledby="addStackModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStackModalLabel">Добавить новый стек</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addStackLine()">
+          <div class="mb-3">
+            <label for="stackName" class="form-label">Название стека</label>
+            <input type="text" id="stackName" class="form-control" [(ngModel)]="newStack.name" name="stackName" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-primary" (click)="addStack()">Добавить</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

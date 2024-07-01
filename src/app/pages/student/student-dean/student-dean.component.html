@@ -8,7 +8,7 @@
         <div class="card-header">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Напишите сообщение" [(ngModel)]="newMessage">
-            <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+            <button class="btn btn-primary" (click)="sendMessage()">Отправить</button>
           </div>
         </div>
         <div class="card-body" *ngFor="let message of messages">

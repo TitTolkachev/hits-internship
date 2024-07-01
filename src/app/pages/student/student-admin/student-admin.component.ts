@@ -5,6 +5,7 @@ import {PartnerService} from "../../../services/partner.service";
 import {jwtDecode} from "jwt-decode";
 import {Jwt} from "../../../models/jwt";
 import {ACCESS_TOKEN_KEY, SELECTED_STREAM_KEY, SERVER_URL} from "../../../constants";
+import {StackService} from "../../../services/stack.service";
 
 declare var bootstrap: any;
 
@@ -20,12 +21,11 @@ export class StudentAdminComponent implements OnInit {
   newMessage: string = '';
   currentUserId: any;
 
-  topCompanies: any[] = [];
-  topStacks: any[] = [];
-  selectedCompanyId!: number;
-  selectedStackId!: number;
-
-  constructor(private route: ActivatedRoute, private http: HttpClient, private partnerService: PartnerService) {
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private partnerService: PartnerService,
+    private stackService: StackService) {
   }
 
   ngOnInit(): void {
@@ -33,19 +33,13 @@ export class StudentAdminComponent implements OnInit {
     this.studentId = this.currentUserId;
     this.getStudentInfo();
     this.getChatHistory();
-    this.getTopCompanies();
-    this.getTopStacks();
+    this.loadCompanies();
+    this.loadStacks();
   }
 
   getStudentInfo(): void {
     this.http.get(`${SERVER_URL}/user/${this.studentId}/info`).subscribe(data => {
       this.studentInfo = data;
-      if (this.studentInfo.company != null) {
-        this.selectedCompanyId = this.studentInfo.company.id;
-      }
-      if (this.studentInfo.techStack != null) {
-        this.selectedStackId = this.studentInfo.techStack.id;
-      }
     });
   }
 
@@ -68,35 +62,16 @@ export class StudentAdminComponent implements OnInit {
     }
   }
 
-  getTopCompanies(): void {
+  loadCompanies(): void {
     const streamName = localStorage.getItem(SELECTED_STREAM_KEY) || ''
     this.partnerService.getAllPartners(streamName).subscribe((data: any[]) => {
-      this.topCompanies = data;
+      this.companies = data;
     });
   }
 
-  getTopStacks(): void {
-    this.http.get<any[]>(`${SERVER_URL}/stack/get`).subscribe((data: any[]) => {
-      this.topStacks = data;
-    });
-  }
-
-  openEditModal(): void {
-    const modal = new bootstrap.Modal(document.getElementById('editModal'));
-    modal.show();
-  }
-
-  updateStudentInfo(): void {
-    this.http.post(`${SERVER_URL}/user/student/update/${this.studentId}`, {
-      deactivated: this.studentInfo.deactivated,
-      streamName: this.studentInfo.streamName,
-      companyId: Number(this.selectedCompanyId),
-      StackId: Number(this.selectedStackId),
-      offeredConfirmed: this.studentInfo.offeredConfirmed
-    }).subscribe(() => {
-      this.getStudentInfo();
-      const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-      modal.hide();
+  loadStacks(): void {
+    this.stackService.getStacks().subscribe(data => {
+      this.stacks = data;
     });
   }
 
@@ -118,5 +93,126 @@ export class StudentAdminComponent implements OnInit {
     const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
 
     return updated ? `${formattedDate} (изменено)` : formattedDate;
+  }
+
+  stacks: any[] = [];
+  selectedStacks: { id: number, priority: number, name: '' }[] = [];
+
+  companies: any[] = [];
+  selectedCompanies: { id: number, priority: number, name: '' }[] = [];
+  selectedOffered: { id: number, priority: number, name: '' }[] = [];
+
+  addStackLine() {
+    this.selectedStacks.push({id: 0, priority: this.selectedStacks.length + 1, name: ''});
+  }
+  addCompanyLine() {
+    this.selectedCompanies.push({id: 0, priority: this.selectedCompanies.length + 1, name: ''});
+  }
+  addOfferedLine() {
+    this.selectedOffered.push({id: 0, priority: this.selectedOffered.length + 1, name: ''});
+  }
+  removeStackLine(index: number) {
+    this.selectedStacks.splice(index, 1);
+  }
+  removeCompanyLine(index: number) {
+    this.selectedCompanies.splice(index, 1);
+  }
+  removeOfferedLine(index: number) {
+    this.selectedOffered.splice(index, 1);
+  }
+
+  saveEditStacks() {
+    this.selectedStacks.sort((a, b) => a.priority - b.priority);
+    // @ts-ignore
+    const topCompanies = this.studentInfo.topCompanies.map(s => Number(s.id));
+    // @ts-ignore
+    const topStacks = this.selectedStacks.map(s => Number(s.id));
+    // @ts-ignore
+    const offered = this.studentInfo.offered.map(s => Number(s.id));
+    this.stackService.updateStudentInfo(topCompanies, offered, topStacks).subscribe(() => {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('viewMeetingModal'));
+      modal.hide();
+      this.getStudentInfo();
+    });
+  }
+
+  saveEditCompanies() {
+    this.selectedCompanies.sort((a, b) => a.priority - b.priority);
+    // @ts-ignore
+    const topCompanies = this.selectedCompanies.map(s => Number(s.id));
+    // @ts-ignore
+    const offered = this.studentInfo.offered.map(s => Number(s.id));
+    // @ts-ignore
+    const topStacks = this.studentInfo.topStacks.map(s => Number(s.id));
+    this.stackService.updateStudentInfo(topCompanies, offered, topStacks).subscribe(() => {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('editCompaniesModal'));
+      modal.hide();
+      this.getStudentInfo();
+    });
+  }
+
+  saveEditOffered() {
+    this.selectedOffered.sort((a, b) => a.priority - b.priority);
+    // @ts-ignore
+    const topCompanies = this.studentInfo.topCompanies.map(s => Number(s.id));
+    // @ts-ignore
+    const offered = this.selectedOffered.map(s => Number(s.id));
+    // @ts-ignore
+    const topStacks = this.studentInfo.topStacks.map(s => Number(s.id));
+    this.stackService.updateStudentInfo(topCompanies, offered, topStacks).subscribe(() => {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('editOfferedModal'));
+      modal.hide();
+      this.getStudentInfo();
+    });
+  }
+
+  openEditStacksModal() {
+    const stacks = this.studentInfo.topStacks as any[]
+    this.selectedStacks = stacks.map((element, index) => {
+      return {id: element.id, priority: index + 1, name: element.name}
+    })
+    const modal = new bootstrap.Modal(document.getElementById('viewMeetingModal'));
+    modal.show();
+  }
+
+  openEditCompaniesModal() {
+    const companies = this.studentInfo.topCompanies as any[]
+    this.selectedCompanies = companies.map((element, index) => {
+      return {id: element.id, priority: index + 1, name: element.name}
+    })
+    const modal = new bootstrap.Modal(document.getElementById('editCompaniesModal'));
+    modal.show();
+  }
+
+  openEditOfferedModal() {
+    const offered = this.studentInfo.offered as any[]
+    this.selectedOffered = offered.map((element, index) => {
+      return {id: element.id, priority: index + 1, name: element.name}
+    })
+    const modal = new bootstrap.Modal(document.getElementById('editOfferedModal'));
+    modal.show();
+  }
+
+  openNewStackModal() {
+    const modal = new bootstrap.Modal(document.getElementById('addStackModal'));
+    modal.show();
+  }
+
+  newStack: any = {
+    name: ''
+  };
+
+  addStack(): void {
+    const body = {
+      name: this.newStack.name
+    };
+    this.http.post(`${SERVER_URL}/stack/create`, body).subscribe(() => {
+      this.stackService.getStacks().subscribe(stacks => {
+        this.stacks = stacks;
+      });
+    });
+    const modalElement = document.getElementById('addStackModal');
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
   }
 }
