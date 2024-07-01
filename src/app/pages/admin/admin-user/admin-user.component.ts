@@ -110,7 +110,7 @@ export class AdminUserComponent implements OnInit {
       companyId: Number(this.selectedCompanyId),
       StackId: Number(this.selectedStackId),
       offeredConfirmed: offered,
-      comment: this.newComment.trim(),
+      comment: this.newComment?.trim(),
     }).subscribe(() => {
       this.getStudentInfo();
       const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));

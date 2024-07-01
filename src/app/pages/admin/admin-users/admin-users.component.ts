@@ -26,36 +26,51 @@ export class AdminUsersComponent implements OnInit {
   }
 
   filteredStudents() {
+    var students = []
     if (!this.searchTerm) {
-      return this.students;
+      students = this.students;
+    } else {
+      students = this.students.filter(student =>
+        `${student.surname} ${student.name}`.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     }
-    return this.students.filter(student =>
-      `${student.surname} ${student.name}`.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    if (this.selectedCriterion === 'name') {
+      return students.sort((a, b) => {
+          if (a.deactivated == b.deactivated) {
+            if ((a.companyName != '') == (b.companyName != '')){
+              if (a.isOffered == b.isOffered){
+                return b.name - a.name
+              } else if (a.isOffered){
+                return -1
+              } else {
+                return 1
+              }
+            } else if (a.companyName != '') {
+              return -1
+            } else {
+              return 1
+            }
+          } else if (a.deactivated) {
+            return 1
+          } else {
+            return -1
+          }
+        }
+      )
+    } else {
+      return students.sort((a, b) => b.lastMessageTime - a.lastMessageTime)
+    }
   }
 
-  getAssignmentStatus(assignments: any[], assignmentNumber: number) {
-    const assignment = assignments[assignmentNumber - 1];
-    return assignment ? assignment.completionStatus : 0;
-  }
-
-  getAssignmentGrade(assignments: any[], assignmentNumber: number) {
-    const assignment = assignments[assignmentNumber - 1];
-    return assignment && assignment.mark ? assignment.mark : '';
-  }
-
-  getGradeClass(assignments: any[], assignmentNumber: number) {
-    const grade = this.getAssignmentGrade(assignments, assignmentNumber);
-    if (grade === 2) {
-      return 'table-danger';
-    } else if (grade === 3) {
-      return 'table-warning';
-    } else if (grade === 4) {
+  getGradeClass(student: any) {
+    if (student.deactivated) {
       return 'table-info';
-    } else if (grade === 5) {
+    } else if (student.companyName != '') {
       return 'table-success';
+    } else if (student.isOffered) {
+      return 'table-warning';
     }
-    return '';
+    return 'table-danger';
   }
 
   goToStudent(studentId: number) {
@@ -84,5 +99,16 @@ export class AdminUsersComponent implements OnInit {
     const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
 
     return updated ? `${formattedDate} (изменено)` : formattedDate;
+  }
+
+  sortCriteria = [
+    {label: 'Статус', value: 'name'},
+    {label: 'Чат', value: 'date'},
+  ];
+
+  selectedCriterion = 'name';
+
+  onSelectionChange(value: string) {
+    this.selectedCriterion = value;
   }
 }

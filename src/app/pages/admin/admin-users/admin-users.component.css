@@ -19,7 +19,8 @@ thead th {
 }
 
 .table-info {
-  background-color: #d1ecf1;
+  background-color: #E2E3E5FF;
+  --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
 }
 
 .table-success {
