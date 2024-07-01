@@ -28,18 +28,69 @@
       <div class="card mb-3">
         <div class="card-header">
           Студент
+          <button class="btn btn-secondary" (click)="openEditModal()">
+          <i class="bi bi-pencil"></i>
+        </button>
         </div>
         <div class="card-body">
-          <p><strong>Логин</strong> {{studentInfo.login}}</p>
-          <p><strong>Имя</strong> {{studentInfo.name}}</p>
-          <p><strong>Фамилия</strong> {{studentInfo.surname}}</p>
-          <p><strong>Место стажировки</strong> {{ studentInfo.company != null ? studentInfo.company.name : ''}}</p>
-          <p><strong>Стек стажировки</strong> {{studentInfo.techStack != null ? studentInfo.techStack.name : ''}}</p>
-          <button class="btn btn-secondary" (click)="openEditModal()">
-            <i class="bi bi-pencil"></i>
-          </button>
+          <p>{{studentInfo.surname}} {{studentInfo.name}} <i *ngIf="studentInfo.deactivated" style="color: #c9302c" class="bi-x-circle-fill"></i></p>
+          <p><strong>Место стажировки</strong> {{ studentInfo.company != null ? studentInfo.company.name : '?'}}</p>
+          <p><strong>Стек стажировки</strong> {{studentInfo.techStack != null ? studentInfo.techStack.name : '?'}}</p>
+          <br/>
+          <p><strong>Подтвержденные офферы</strong></p>
+          <div  *ngIf="studentInfo.offeredConfirmed.length != 0">
+            <p *ngFor="let company of studentInfo.offeredConfirmed; let i = index">
+              {{company.name}}
+            </p>
+          </div>
+          <div  *ngIf="studentInfo.offeredConfirmed.length === 0">Отсутствуют</div>
+          <div *ngIf="studentInfo.comment != null && studentInfo.comment!=''">
+            <br/>
+            <p><strong>Комментарий</strong></p>
+            <p>{{studentInfo.comment}}</p>
+          </div>
         </div>
       </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Компании</div>
+        <div class="card-body">
+          <h6>Приоритеты по компаниям</h6>
+          <div *ngIf="studentInfo.topCompanies.length != 0">
+            <p *ngFor="let company of studentInfo.topCompanies; let i = index">
+              {{i + 1}} - {{company.name}}
+            </p>
+          </div>
+          <div *ngIf="studentInfo.topCompanies.length === 0">Не заполнено</div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Стеки</div>
+        <div class="card-body">
+          <h6>Приоритеты по стекам</h6>
+          <div>
+            <p *ngFor="let stack of studentInfo.topStacks; let i = index">
+              {{i + 1}} - {{stack.name}}
+            </p>
+          </div>
+          <div *ngIf="studentInfo.topStacks.length === 0">Не заполнено</div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Офферы</div>
+        <div class="card-body">
+          <h6>Компании, которые предложили стажировку</h6>
+          <div *ngIf="studentInfo.offered.length != 0">
+            <p *ngFor="let company of studentInfo.offered; let i = index">
+              {{i + 1}} - {{company.name}}
+            </p>
+          </div>
+          <div *ngIf="studentInfo.topStacks.length === 0">Список пуст</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -57,15 +108,36 @@
           <div class="mb-3">
             <label for="companySelect" class="form-label">Компания</label>
             <select id="companySelect" class="form-select" [(ngModel)]="selectedCompanyId" name="selectedCompanyId">
-              <option *ngFor="let company of topCompanies" [value]="company.id">{{company.name}}</option>
+              <option *ngFor="let company of companies" [value]="company.id">{{company.name}}</option>
             </select>
           </div>
           <div class="mb-3">
             <label for="stackSelect" class="form-label">Стек</label>
             <select id="stackSelect" class="form-select" [(ngModel)]="selectedStackId" name="selectedStackId">
-              <option *ngFor="let stack of topStacks" [value]="stack.id">{{stack.name}}</option>
+              <option *ngFor="let stack of stacks" [value]="stack.id">{{stack.name}}</option>
             </select>
           </div>
+          <div class="mb-3">
+            <label for="deactivatedSelect" class="form-label">На отчисление</label>
+            <select id="deactivatedSelect" class="form-select" [(ngModel)]="newDeactivated" name="newDeactivated">
+              <option *ngFor="let deactivated of [true, false]" [value]="deactivated">{{deactivated}}</option>
+            </select>
+          </div>
+          <h5>Офферы от компаний</h5>
+          <div class="mb-3">
+            <div *ngFor="let company of selectedOffered; let i = index" class="d-flex align-items-center mb-2">
+              <select [(ngModel)]="company.id" class="form-select me-2" name="{{company.id}}-selectedOffered">
+                <option *ngFor="let s of companies" [value]="s.id">{{ s.name }}</option>
+              </select>
+              <input type="number" [(ngModel)]="company.priority" name="{{company.id}}-selectedOfferedPriority" class="form-control me-2" style="width: 80px;">
+              <button type="button" class="btn btn-danger" (click)="removeOfferedLine(i)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <button type="button" class="btn btn-outline-secondary me-2" (click)="addOfferedLine()">Добавить строку</button>
+          </div>
+          <h5>Комментарий</h5>
+          <input type="text" id="newComment" class="form-control" [(ngModel)]="newComment" name="newComment">
         </form>
       </div>
       <div class="modal-footer">

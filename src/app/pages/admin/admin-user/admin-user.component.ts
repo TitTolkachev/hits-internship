@@ -19,10 +19,13 @@ export class AdminUserComponent implements OnInit {
   newMessage: string = '';
   currentUserId: any;
 
-  topCompanies: any[] = [];
-  topStacks: any[] = [];
+  companies: any[] = [];
+  stacks: any[] = [];
   selectedCompanyId!: number;
   selectedStackId!: number;
+  selectedOffered: { id: number, priority: number, name: '' }[] = [];
+  newComment: string = '';
+  newDeactivated: boolean = false;
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private partnerService: PartnerService) {
   }
@@ -72,28 +75,42 @@ export class AdminUserComponent implements OnInit {
   getTopCompanies(): void {
     const streamName = localStorage.getItem(SELECTED_STREAM_KEY) || ''
     this.partnerService.getAllPartners(streamName).subscribe((data: any[]) => {
-      this.topCompanies = data;
+      this.companies = data;
     });
   }
 
   getTopStacks(): void {
     this.http.get<any[]>(`${SERVER_URL}/stack/get`).subscribe((data: any[]) => {
-      this.topStacks = data;
+      this.stacks = data;
     });
   }
 
   openEditModal(): void {
+    this.selectedCompanyId = this.studentInfo.company?.id
+    this.selectedStackId =this.studentInfo.techStack?.id
+    const offered = this.studentInfo.offeredConfirmed as any[]
+    this.selectedOffered = offered.map((element, index) => {
+      return {id: element.id, priority: index + 1, name: element.name}
+    })
+    this.newComment = this.studentInfo.comment
+    this.newDeactivated = this.studentInfo.deactivated
     const modal = new bootstrap.Modal(document.getElementById('editModal'));
     modal.show();
   }
 
   updateStudentInfo(): void {
+    const offered = this.selectedOffered
+      .filter(c=>c.id >= 0)
+      .sort((a, b) => a.priority - b.priority)
+      .map(s => Number(s.id));
+
     this.http.post(`${SERVER_URL}/user/student/update/${this.studentId}`, {
-      deactivated: this.studentInfo.deactivated,
+      deactivated: `${this.newDeactivated}` === "true",
       streamName: this.studentInfo.streamName,
       companyId: Number(this.selectedCompanyId),
       StackId: Number(this.selectedStackId),
-      offeredConfirmed: this.studentInfo.offeredConfirmed
+      offeredConfirmed: offered,
+      comment: this.newComment.trim(),
     }).subscribe(() => {
       this.getStudentInfo();
       const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
@@ -119,5 +136,15 @@ export class AdminUserComponent implements OnInit {
     const formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}`;
 
     return updated ? `${formattedDate} (изменено)` : formattedDate;
+  }
+
+  counter = -1;
+
+  addOfferedLine() {
+    this.selectedOffered.push({id: this.counter--, priority: this.selectedOffered.length + 1, name: ''});
+  }
+
+  removeOfferedLine(index: number) {
+    this.selectedOffered.splice(index, 1);
   }
 }
